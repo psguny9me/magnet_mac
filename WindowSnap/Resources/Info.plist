@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- 앱 기본 정보 -->
+    <key>CFBundleName</key>
+    <string>WindowSnap</string>
+    <key>CFBundleDisplayName</key>
+    <string>WindowSnap</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.windowsnap.app</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleExecutable</key>
+    <string>WindowSnap</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
+    <!-- Dock 아이콘 숨기기: 메뉴바 전용 앱 -->
+    <key>LSUIElement</key>
+    <true/>
+    <!-- 최소 요구 OS -->
+    <key>LSMinimumSystemVersion</key>
+    <string>14.0</string>
+    <!-- 주요 Nib 파일 없음 (SwiftUI lifecycle) -->
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+    <!-- Accessibility 권한 사용 설명 -->
+    <key>NSAccessibilityUsageDescription</key>
+    <string>WindowSnap uses Accessibility to move and resize windows according to your snap layouts.</string>
+</dict>
+</plist>

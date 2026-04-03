@@ -1,0 +1,178 @@
+{
+  "" : {
+    "diagnostics" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowSnap-master.dia",
+    "emit-module-dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowSnap-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowSnap-master-emit-module.dia",
+    "swift-dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowSnap-master.swiftdeps"
+  },
+  "/Users/psguny9/magnet_mac/WindowSnap/App/AppDelegate.swift" : {
+    "const-values" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AppDelegate.swiftconstvalues",
+    "dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AppDelegate.d",
+    "diagnostics" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AppDelegate.dia",
+    "index-unit-output-path" : "/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AppDelegate.o",
+    "llvm-bc" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AppDelegate.bc",
+    "object" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AppDelegate.o",
+    "swift-dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AppDelegate.swiftdeps",
+    "swiftmodule" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AppDelegate~partial.swiftmodule"
+  },
+  "/Users/psguny9/magnet_mac/WindowSnap/App/WindowSnapApp.swift" : {
+    "const-values" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowSnapApp.swiftconstvalues",
+    "dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowSnapApp.d",
+    "diagnostics" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowSnapApp.dia",
+    "index-unit-output-path" : "/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowSnapApp.o",
+    "llvm-bc" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowSnapApp.bc",
+    "object" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowSnapApp.o",
+    "swift-dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowSnapApp.swiftdeps",
+    "swiftmodule" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowSnapApp~partial.swiftmodule"
+  },
+  "/Users/psguny9/magnet_mac/WindowSnap/Core/Models/LayoutPreset.swift" : {
+    "const-values" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/LayoutPreset.swiftconstvalues",
+    "dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/LayoutPreset.d",
+    "diagnostics" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/LayoutPreset.dia",
+    "index-unit-output-path" : "/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/LayoutPreset.o",
+    "llvm-bc" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/LayoutPreset.bc",
+    "object" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/LayoutPreset.o",
+    "swift-dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/LayoutPreset.swiftdeps",
+    "swiftmodule" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/LayoutPreset~partial.swiftmodule"
+  },
+  "/Users/psguny9/magnet_mac/WindowSnap/Core/ScreenManager.swift" : {
+    "const-values" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/ScreenManager.swiftconstvalues",
+    "dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/ScreenManager.d",
+    "diagnostics" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/ScreenManager.dia",
+    "index-unit-output-path" : "/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/ScreenManager.o",
+    "llvm-bc" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/ScreenManager.bc",
+    "object" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/ScreenManager.o",
+    "swift-dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/ScreenManager.swiftdeps",
+    "swiftmodule" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/ScreenManager~partial.swiftmodule"
+  },
+  "/Users/psguny9/magnet_mac/WindowSnap/Core/SnapCalculator.swift" : {
+    "const-values" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/SnapCalculator.swiftconstvalues",
+    "dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/SnapCalculator.d",
+    "diagnostics" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/SnapCalculator.dia",
+    "index-unit-output-path" : "/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/SnapCalculator.o",
+    "llvm-bc" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/SnapCalculator.bc",
+    "object" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/SnapCalculator.o",
+    "swift-dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/SnapCalculator.swiftdeps",
+    "swiftmodule" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/SnapCalculator~partial.swiftmodule"
+  },
+  "/Users/psguny9/magnet_mac/WindowSnap/Core/WindowManager.swift" : {
+    "const-values" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowManager.swiftconstvalues",
+    "dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowManager.d",
+    "diagnostics" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowManager.dia",
+    "index-unit-output-path" : "/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowManager.o",
+    "llvm-bc" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowManager.bc",
+    "object" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowManager.o",
+    "swift-dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowManager.swiftdeps",
+    "swiftmodule" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/WindowManager~partial.swiftmodule"
+  },
+  "/Users/psguny9/magnet_mac/WindowSnap/Events/DragMonitor.swift" : {
+    "const-values" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/DragMonitor.swiftconstvalues",
+    "dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/DragMonitor.d",
+    "diagnostics" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/DragMonitor.dia",
+    "index-unit-output-path" : "/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/DragMonitor.o",
+    "llvm-bc" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/DragMonitor.bc",
+    "object" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/DragMonitor.o",
+    "swift-dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/DragMonitor.swiftdeps",
+    "swiftmodule" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/DragMonitor~partial.swiftmodule"
+  },
+  "/Users/psguny9/magnet_mac/WindowSnap/Events/KeyboardShortcutManager.swift" : {
+    "const-values" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/KeyboardShortcutManager.swiftconstvalues",
+    "dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/KeyboardShortcutManager.d",
+    "diagnostics" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/KeyboardShortcutManager.dia",
+    "index-unit-output-path" : "/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/KeyboardShortcutManager.o",
+    "llvm-bc" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/KeyboardShortcutManager.bc",
+    "object" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/KeyboardShortcutManager.o",
+    "swift-dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/KeyboardShortcutManager.swiftdeps",
+    "swiftmodule" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/KeyboardShortcutManager~partial.swiftmodule"
+  },
+  "/Users/psguny9/magnet_mac/WindowSnap/Settings/AppSettings.swift" : {
+    "const-values" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AppSettings.swiftconstvalues",
+    "dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AppSettings.d",
+    "diagnostics" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AppSettings.dia",
+    "index-unit-output-path" : "/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AppSettings.o",
+    "llvm-bc" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AppSettings.bc",
+    "object" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AppSettings.o",
+    "swift-dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AppSettings.swiftdeps",
+    "swiftmodule" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AppSettings~partial.swiftmodule"
+  },
+  "/Users/psguny9/magnet_mac/WindowSnap/UI/MenuBarController.swift" : {
+    "const-values" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/MenuBarController.swiftconstvalues",
+    "dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/MenuBarController.d",
+    "diagnostics" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/MenuBarController.dia",
+    "index-unit-output-path" : "/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/MenuBarController.o",
+    "llvm-bc" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/MenuBarController.bc",
+    "object" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/MenuBarController.o",
+    "swift-dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/MenuBarController.swiftdeps",
+    "swiftmodule" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/MenuBarController~partial.swiftmodule"
+  },
+  "/Users/psguny9/magnet_mac/WindowSnap/UI/Onboarding/OnboardingView.swift" : {
+    "const-values" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/OnboardingView.swiftconstvalues",
+    "dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/OnboardingView.d",
+    "diagnostics" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/OnboardingView.dia",
+    "index-unit-output-path" : "/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/OnboardingView.o",
+    "llvm-bc" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/OnboardingView.bc",
+    "object" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/OnboardingView.o",
+    "swift-dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/OnboardingView.swiftdeps",
+    "swiftmodule" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/OnboardingView~partial.swiftmodule"
+  },
+  "/Users/psguny9/magnet_mac/WindowSnap/UI/Preferences/AdvancedView.swift" : {
+    "const-values" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AdvancedView.swiftconstvalues",
+    "dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AdvancedView.d",
+    "diagnostics" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AdvancedView.dia",
+    "index-unit-output-path" : "/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AdvancedView.o",
+    "llvm-bc" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AdvancedView.bc",
+    "object" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AdvancedView.o",
+    "swift-dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AdvancedView.swiftdeps",
+    "swiftmodule" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/AdvancedView~partial.swiftmodule"
+  },
+  "/Users/psguny9/magnet_mac/WindowSnap/UI/Preferences/GeneralView.swift" : {
+    "const-values" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/GeneralView.swiftconstvalues",
+    "dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/GeneralView.d",
+    "diagnostics" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/GeneralView.dia",
+    "index-unit-output-path" : "/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/GeneralView.o",
+    "llvm-bc" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/GeneralView.bc",
+    "object" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/GeneralView.o",
+    "swift-dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/GeneralView.swiftdeps",
+    "swiftmodule" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/GeneralView~partial.swiftmodule"
+  },
+  "/Users/psguny9/magnet_mac/WindowSnap/UI/Preferences/LayoutsView.swift" : {
+    "const-values" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/LayoutsView.swiftconstvalues",
+    "dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/LayoutsView.d",
+    "diagnostics" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/LayoutsView.dia",
+    "index-unit-output-path" : "/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/LayoutsView.o",
+    "llvm-bc" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/LayoutsView.bc",
+    "object" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/LayoutsView.o",
+    "swift-dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/LayoutsView.swiftdeps",
+    "swiftmodule" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/LayoutsView~partial.swiftmodule"
+  },
+  "/Users/psguny9/magnet_mac/WindowSnap/UI/Preferences/PreferencesView.swift" : {
+    "const-values" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/PreferencesView.swiftconstvalues",
+    "dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/PreferencesView.d",
+    "diagnostics" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/PreferencesView.dia",
+    "index-unit-output-path" : "/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/PreferencesView.o",
+    "llvm-bc" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/PreferencesView.bc",
+    "object" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/PreferencesView.o",
+    "swift-dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/PreferencesView.swiftdeps",
+    "swiftmodule" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/PreferencesView~partial.swiftmodule"
+  },
+  "/Users/psguny9/magnet_mac/WindowSnap/UI/Preferences/ShortcutsView.swift" : {
+    "const-values" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/ShortcutsView.swiftconstvalues",
+    "dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/ShortcutsView.d",
+    "diagnostics" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/ShortcutsView.dia",
+    "index-unit-output-path" : "/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/ShortcutsView.o",
+    "llvm-bc" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/ShortcutsView.bc",
+    "object" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/ShortcutsView.o",
+    "swift-dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/ShortcutsView.swiftdeps",
+    "swiftmodule" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/ShortcutsView~partial.swiftmodule"
+  },
+  "/Users/psguny9/magnet_mac/WindowSnap/UI/SnapPreviewWindow.swift" : {
+    "const-values" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/SnapPreviewWindow.swiftconstvalues",
+    "dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/SnapPreviewWindow.d",
+    "diagnostics" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/SnapPreviewWindow.dia",
+    "index-unit-output-path" : "/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/SnapPreviewWindow.o",
+    "llvm-bc" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/SnapPreviewWindow.bc",
+    "object" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/SnapPreviewWindow.o",
+    "swift-dependencies" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/SnapPreviewWindow.swiftdeps",
+    "swiftmodule" : "/Users/psguny9/magnet_mac/build/WindowSnap.build/Debug/WindowSnap.build/Objects-normal/arm64/SnapPreviewWindow~partial.swiftmodule"
+  }
+}
