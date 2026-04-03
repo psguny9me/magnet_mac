@@ -56,11 +56,13 @@ final class KeyboardShortcutManager: @unchecked Sendable {
     }
 
     /// 이벤트 탭 활성화 (Accessibility 권한 필요)
+    /// 탭 생성 실패 시 isEnabled는 false로 유지해 재시도 가능하게 함
     func startListening() {
         guard AXIsProcessTrusted() else { return }
-        guard !isEnabled else { return }
+        if isEnabled, eventTap != nil { return }
+        tearDownEventTap()
         setupEventTap()
-        isEnabled = true
+        isEnabled = eventTap != nil
     }
 
     /// 이벤트 탭 비활성화
@@ -160,9 +162,10 @@ final class KeyboardShortcutManager: @unchecked Sendable {
 
     private func executeSnapAction(for layout: LayoutPreset) {
         guard let window = WindowManager.shared.getFocusedWindow() else { return }
-        guard let mouseLocation = NSEvent.mouseLocation as CGPoint?,
-              let screen = ScreenManager.shared.screenContaining(mouseLocation: mouseLocation)
-                ?? NSScreen.main else { return }
+        let screen = ScreenManager.shared.screenForSnap(with: window)
+            ?? ScreenManager.shared.screenContaining(mouseLocation: NSEvent.mouseLocation)
+            ?? NSScreen.main
+        guard let screen else { return }
 
         // restore 레이아웃 특수 처리
         if layout.frame.width == 0 && layout.frame.height == 0 && layout.name == BuiltInLayout.restore.localizedName {

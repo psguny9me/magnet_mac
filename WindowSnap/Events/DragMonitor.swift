@@ -43,9 +43,10 @@ final class DragMonitor: @unchecked Sendable {
     /// 드래그 모니터 시작 (Accessibility 권한 필요)
     func startMonitoring() {
         guard AXIsProcessTrusted() else { return }
-        guard !isActive else { return }
+        if isActive, eventTap != nil { return }
+        tearDownEventTap()
         setupEventTap()
-        isActive = true
+        isActive = eventTap != nil
     }
 
     /// 드래그 모니터 중지

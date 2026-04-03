@@ -1,4 +1,5 @@
 import AppKit
+import ApplicationServices
 import SwiftUI
 
 // MARK: - AppDelegate
@@ -19,6 +20,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             showOnboarding()
         }
+    }
+
+    func applicationDidBecomeActive(_ notification: Notification) {
+        // 시스템 설정에서 접근성을 켠 뒤 복귀했을 때 이벤트 탭이 아직 없을 수 있음
+        synchronizeAccessibilityDependentServices()
     }
 
     func applicationWillTerminate(_ notification: Notification) {
@@ -53,6 +59,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             if settings.dragTriggerEnabled {
                 DragMonitor.shared.startMonitoring()
             }
+        }
+    }
+
+    /// 접근성 허용 후 복귀 시 단축키·드래그 모니터를 다시 붙임 (최초 거부 후 허용 대응)
+    private func synchronizeAccessibilityDependentServices() {
+        guard AXIsProcessTrusted() else { return }
+        let settings = AppSettings.shared
+        let presets = settings.makeBuiltInPresets() + settings.customLayouts
+        KeyboardShortcutManager.shared.registerShortcuts(from: presets)
+        KeyboardShortcutManager.shared.startListening()
+        if settings.dragTriggerEnabled {
+            DragMonitor.shared.startMonitoring()
         }
     }
 

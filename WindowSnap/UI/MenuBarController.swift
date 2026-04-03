@@ -213,7 +213,7 @@ final class MenuBarController {
         guard let rawValue = sender.representedObject as? String,
               let builtIn = BuiltInLayout(rawValue: rawValue),
               let window = WindowManager.shared.getFocusedWindow(),
-              let screen = getActiveScreen() else { return }
+              let screen = getActiveScreen(for: window) else { return }
 
         let settings = AppSettings.shared
         let preset = builtIn.makeLayoutPreset(
@@ -229,7 +229,7 @@ final class MenuBarController {
               let uuid = UUID(uuidString: idString),
               let layout = AppSettings.shared.customLayouts.first(where: { $0.id == uuid }),
               let window = WindowManager.shared.getFocusedWindow(),
-              let screen = getActiveScreen() else { return }
+              let screen = getActiveScreen(for: window) else { return }
 
         WindowManager.shared.snapWindow(window, to: layout, on: screen)
     }
@@ -271,8 +271,10 @@ final class MenuBarController {
         }
     }
 
-    private func getActiveScreen() -> NSScreen? {
-        let mouseLocation = NSEvent.mouseLocation
-        return ScreenManager.shared.screenContaining(mouseLocation: mouseLocation) ?? NSScreen.main
+    /// 스냅 대상 모니터: 창이 위치한 화면 우선, 실패 시 마우스 위치, 그다음 메인 화면
+    private func getActiveScreen(for window: AXUIElement) -> NSScreen? {
+        ScreenManager.shared.screenForSnap(with: window)
+            ?? ScreenManager.shared.screenContaining(mouseLocation: NSEvent.mouseLocation)
+            ?? NSScreen.main
     }
 }

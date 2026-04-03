@@ -19,6 +19,13 @@ struct GeneralView: View {
 
             Section("드래그 트리거") {
                 Toggle("드래그 트리거 활성화", isOn: $settings.dragTriggerEnabled)
+                    .onChange(of: settings.dragTriggerEnabled) { _, isDragTriggerEnabled in
+                        if isDragTriggerEnabled, AXIsProcessTrusted() {
+                            DragMonitor.shared.startMonitoring()
+                        } else if !isDragTriggerEnabled {
+                            DragMonitor.shared.stopMonitoring()
+                        }
+                    }
 
                 if settings.dragTriggerEnabled {
                     HStack {

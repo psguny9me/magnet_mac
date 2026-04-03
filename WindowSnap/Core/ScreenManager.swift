@@ -1,4 +1,5 @@
 import AppKit
+import ApplicationServices
 import Observation
 
 // MARK: - ScreenManager
@@ -29,6 +30,12 @@ final class ScreenManager: @unchecked Sendable {
         screens.first { screen in
             screen.frame.contains(mouseLocation)
         }
+    }
+
+    /// 포커스 창이 주로 올라가 있는 모니터 (교차 면적 최대). 멀티 모니터에서 스냅 대상 화면 결정에 사용
+    func screenForSnap(with window: AXUIElement) -> NSScreen? {
+        guard let frame = WindowManager.shared.getWindowFrame(window) else { return nil }
+        return screenContaining(frame: frame)
     }
 
     /// 지정된 CGRect 영역을 가장 많이 포함하는 모니터를 반환
