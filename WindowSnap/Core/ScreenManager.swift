@@ -5,6 +5,9 @@ import Observation
 // MARK: - ScreenManager
 
 /// 연결된 모니터 목록 관리 및 화면 변경 이벤트 처리
+///
+/// Multi-monitor snap — Step 1 & 2 here; Step 3 (BL global ↔ AX) lives in `SnapCalculator`.
+/// Manual check: single display; side-by-side; stacked; menu bar on external if applicable.
 @Observable
 final class ScreenManager: @unchecked Sendable {
 
@@ -25,6 +28,11 @@ final class ScreenManager: @unchecked Sendable {
 
     // MARK: - Public API
 
+    /// Step 1: more than one connected display
+    var isMultiMonitor: Bool {
+        screens.count > 1
+    }
+
     /// 마우스 커서 위치가 속하는 모니터를 반환
     func screenContaining(mouseLocation: CGPoint) -> NSScreen? {
         screens.first { screen in
@@ -32,14 +40,15 @@ final class ScreenManager: @unchecked Sendable {
         }
     }
 
-    /// 포커스 창이 주로 올라가 있는 모니터 (교차 면적 최대). 멀티 모니터에서 스냅 대상 화면 결정에 사용
+    /// Step 2 (keyboard / menu): focused window’s screen via AX frame → bottom-left global → max intersection with `screen.frame`
     func screenForSnap(with window: AXUIElement) -> NSScreen? {
-        guard let frame = WindowManager.shared.getWindowFrame(window) else { return nil }
-        return screenContaining(frame: frame)
+        guard let axFrame = WindowManager.shared.getWindowFrame(window) else { return nil }
+        let bottomLeftFrame = SnapCalculator.shared.convertAXFrameToBottomLeftGlobal(axFrame)
+        return screenContainingBottomLeftGlobalFrame(bottomLeftFrame)
     }
 
-    /// 지정된 CGRect 영역을 가장 많이 포함하는 모니터를 반환
-    func screenContaining(frame: CGRect) -> NSScreen? {
+    /// 좌하단 원점 글로벌 좌표의 영역과 교차 면적이 가장 큰 모니터 반환 (NSScreen.frame과 동일 계열)
+    private func screenContainingBottomLeftGlobalFrame(_ frame: CGRect) -> NSScreen? {
         var bestScreen: NSScreen?
         var largestIntersection: CGFloat = 0
         for screen in screens {

@@ -31,6 +31,11 @@ enum SnapTriggerZone {
 // MARK: - SnapCalculator
 
 /// 레이아웃 프리셋의 절대 좌표 계산 및 드래그 트리거 영역 판단
+///
+/// Multi-monitor snap pipeline (see also `ScreenManager`):
+/// - Step 1: `ScreenManager.isMultiMonitor` — whether `screens.count > 1` (diagnostics / branching).
+/// - Step 2: Target `NSScreen` — keyboard/menu use focused window (`screenForSnap`); drag uses cursor (`screenContaining(mouseLocation:)`).
+/// - Step 3: This type converts that screen’s `frame` / `visibleFrame` (bottom-left global) to AX space using `NSScreen.main` as the kAXPosition Y reference (menu bar screen), then `LayoutPreset.toAbsoluteFrame(in:)`.
 final class SnapCalculator {
 
     // MARK: - Singleton
@@ -173,14 +178,23 @@ final class SnapCalculator {
 
     // MARK: - Coordinate System Conversion
 
-    /// macOS 좌하단 원점 -> AXUIElement 좌상단 원점으로 변환
-    /// AXUIElement는 메인 화면의 좌상단을 (0, 0)으로 사용
-    func convertToTopLeftOrigin(frame: CGRect, screen: NSScreen) -> CGRect {
-        guard let primaryScreen = NSScreen.screens.first else { return frame }
-        let primaryScreenHeight = primaryScreen.frame.height
-        // y 좌표를 반전하여 좌상단 원점 기준으로 변환
-        let convertedY = primaryScreenHeight - frame.maxY
+    /// Bottom-edge Y of the menu bar screen in NSScreen global coords (Y up). Matches kAXPosition (0,0) = top-left of that screen.
+    private func menuBarScreenMaxYBottomLeftGlobal() -> CGFloat? {
+        NSScreen.main?.frame.maxY
+    }
+
+    /// NSScreen.frame / visibleFrame(좌하단 원점 글로벌) -> AX kAXPosition/kAXSize용 (좌상단 원점, Y 아래)
+    func convertToTopLeftOrigin(frame: CGRect, screen _: NSScreen) -> CGRect {
+        guard let menuBarMaxY = menuBarScreenMaxYBottomLeftGlobal() else { return frame }
+        let convertedY = menuBarMaxY - frame.maxY
         return CGRect(x: frame.origin.x, y: convertedY, width: frame.width, height: frame.height)
+    }
+
+    /// AX에서 읽은 창 프레임(좌상단 원점, Y 아래) -> NSScreen.frame과 동일한 좌하단 글로벌 좌표
+    func convertAXFrameToBottomLeftGlobal(_ axFrame: CGRect) -> CGRect {
+        guard let menuBarMaxY = menuBarScreenMaxYBottomLeftGlobal() else { return axFrame }
+        let bottomLeftOriginY = menuBarMaxY - axFrame.maxY
+        return CGRect(x: axFrame.origin.x, y: bottomLeftOriginY, width: axFrame.width, height: axFrame.height)
     }
 
     // MARK: - Multi-Monitor Scale Factor Handling

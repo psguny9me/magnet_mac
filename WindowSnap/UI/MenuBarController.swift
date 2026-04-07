@@ -271,7 +271,7 @@ final class MenuBarController {
         }
     }
 
-    /// 스냅 대상 모니터: 창이 위치한 화면 우선, 실패 시 마우스 위치, 그다음 메인 화면
+    /// Step 2: `screenForSnap` → mouse `screenContaining` → `NSScreen.main` (same order as `KeyboardShortcutManager`)
     private func getActiveScreen(for window: AXUIElement) -> NSScreen? {
         ScreenManager.shared.screenForSnap(with: window)
             ?? ScreenManager.shared.screenContaining(mouseLocation: NSEvent.mouseLocation)

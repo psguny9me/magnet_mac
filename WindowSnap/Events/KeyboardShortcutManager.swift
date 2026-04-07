@@ -162,6 +162,7 @@ final class KeyboardShortcutManager: @unchecked Sendable {
 
     private func executeSnapAction(for layout: LayoutPreset) {
         guard let window = WindowManager.shared.getFocusedWindow() else { return }
+        // Step 2: same policy as `MenuBarController.getActiveScreen` — window screen, then mouse, then main
         let screen = ScreenManager.shared.screenForSnap(with: window)
             ?? ScreenManager.shared.screenContaining(mouseLocation: NSEvent.mouseLocation)
             ?? NSScreen.main

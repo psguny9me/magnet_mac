@@ -132,6 +132,7 @@ final class DragMonitor: @unchecked Sendable {
         guard isDragging else { return }
 
         let mouseLocation = NSEvent.mouseLocation
+        // Step 2 (drag): target display is where the cursor is (not focused window)
         guard let screen = ScreenManager.shared.screenContaining(mouseLocation: mouseLocation) else { return }
 
         let threshold = CGFloat(settings.dragTriggerThreshold)
