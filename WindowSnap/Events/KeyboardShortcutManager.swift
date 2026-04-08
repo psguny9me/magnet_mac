@@ -174,6 +174,19 @@ final class KeyboardShortcutManager: @unchecked Sendable {
             return
         }
 
+        if layout.name == BuiltInLayout.moveToMonitor1.localizedName {
+            WindowManager.shared.moveFocusedWindowToMonitor(oneBasedIndex: 1)
+            return
+        }
+        if layout.name == BuiltInLayout.moveToMonitor2.localizedName {
+            WindowManager.shared.moveFocusedWindowToMonitor(oneBasedIndex: 2)
+            return
+        }
+        if layout.name == BuiltInLayout.moveToMonitor3.localizedName {
+            WindowManager.shared.moveFocusedWindowToMonitor(oneBasedIndex: 3)
+            return
+        }
+
         // center 레이아웃 특수 처리 (현재 크기 유지, 중앙 배치)
         if layout.frame.width == 0 && layout.frame.height == 0 {
             if let currentFrame = WindowManager.shared.getWindowFrame(window) {

@@ -145,6 +145,16 @@ final class MenuBarController {
 
         menu.addItem(.separator())
 
+        let monitorMenu = NSMenu(title: "모니터로 이동")
+        for monitorLayout in [BuiltInLayout.moveToMonitor1, .moveToMonitor2, .moveToMonitor3] {
+            addLayoutMenuItem(to: monitorMenu, layout: monitorLayout)
+        }
+        let monitorItem = NSMenuItem(title: "모니터로 이동", action: nil, keyEquivalent: "")
+        monitorItem.submenu = monitorMenu
+        menu.addItem(monitorItem)
+
+        menu.addItem(.separator())
+
         // 전체화면, 중앙, 복원
         addLayoutMenuItem(to: menu, layout: .fullscreen)
         addLayoutMenuItem(to: menu, layout: .center)
@@ -266,6 +276,12 @@ final class MenuBarController {
                 )
                 WindowManager.shared.setWindowFrame(window, frame: centeredFrame)
             }
+        case .moveToMonitor1:
+            WindowManager.shared.moveFocusedWindowToMonitor(oneBasedIndex: 1)
+        case .moveToMonitor2:
+            WindowManager.shared.moveFocusedWindowToMonitor(oneBasedIndex: 2)
+        case .moveToMonitor3:
+            WindowManager.shared.moveFocusedWindowToMonitor(oneBasedIndex: 3)
         default:
             WindowManager.shared.snapWindow(window, to: preset, on: screen)
         }

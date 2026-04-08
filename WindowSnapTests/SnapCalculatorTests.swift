@@ -1,3 +1,4 @@
+import AppKit
 import XCTest
 
 // MARK: - SnapCalculatorTests
@@ -58,7 +59,7 @@ final class SnapCalculatorTests: XCTestCase {
     }
 
     func testAllBuiltInLayoutsHaveNonZeroFrames() {
-        let specialLayouts: Set<BuiltInLayout> = [.center, .restore]
+        let specialLayouts: Set<BuiltInLayout> = [.center, .restore, .moveToMonitor1, .moveToMonitor2, .moveToMonitor3]
         for layout in BuiltInLayout.allCases {
             guard !specialLayouts.contains(layout) else { continue }
             let preset = layout.makeLayoutPreset()
@@ -74,6 +75,21 @@ final class SnapCalculatorTests: XCTestCase {
         let rotatedFrame = calculator.rotateFrameForPortrait(originalFrame)
         XCTAssertEqual(rotatedFrame.width, originalFrame.height)
         XCTAssertEqual(rotatedFrame.height, originalFrame.width)
+    }
+
+    /// Menu-bar Y reference: BL global screen.frame -> AX -> BL global round-trips for `NSScreen.main`
+    func testBottomLeftGlobalToAXRoundTripForMainScreenFrame() {
+        guard let mainScreen = NSScreen.main else {
+            XCTFail("NSScreen.main required")
+            return
+        }
+        let inputBottomLeftGlobal = mainScreen.frame
+        let axRect = calculator.convertToTopLeftOrigin(frame: inputBottomLeftGlobal, screen: mainScreen)
+        let outputBottomLeftGlobal = calculator.convertAXFrameToBottomLeftGlobal(axRect)
+        XCTAssertEqual(outputBottomLeftGlobal.origin.x, inputBottomLeftGlobal.origin.x, accuracy: 0.01)
+        XCTAssertEqual(outputBottomLeftGlobal.origin.y, inputBottomLeftGlobal.origin.y, accuracy: 0.01)
+        XCTAssertEqual(outputBottomLeftGlobal.width, inputBottomLeftGlobal.width, accuracy: 0.01)
+        XCTAssertEqual(outputBottomLeftGlobal.height, inputBottomLeftGlobal.height, accuracy: 0.01)
     }
 
 }

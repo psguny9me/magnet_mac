@@ -63,17 +63,12 @@ final class LayoutPresetTests: XCTestCase {
     // MARK: - BuiltInLayout 테스트
 
     func testBuiltInLayoutCount() {
-        XCTAssertEqual(BuiltInLayout.allCases.count, 16)
+        XCTAssertEqual(BuiltInLayout.allCases.count, 19)
     }
 
     func testAllBuiltInLayoutsHaveDefaultShortcuts() {
-        let layoutsWithoutShortcut: [BuiltInLayout] = []
         for layout in BuiltInLayout.allCases {
-            guard !layoutsWithoutShortcut.contains(layout) else { continue }
-            // restore와 center를 제외한 모든 레이아웃은 기본 단축키를 가져야 함
-            if layout == .restore || layout == .center || layout == .fullscreen {
-                XCTAssertNotNil(layout.defaultShortcut, "\(layout) should have a default shortcut")
-            }
+            XCTAssertNotNil(layout.defaultShortcut, "\(layout) should have a default shortcut")
         }
     }
 

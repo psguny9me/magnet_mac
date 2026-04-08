@@ -74,7 +74,7 @@ struct LayoutPreset: Codable, Identifiable, Equatable {
 
 // MARK: - BuiltInLayout
 
-/// 기본 제공 레이아웃 프리셋 정의 (16개)
+/// 기본 제공 레이아웃 프리셋 정의
 enum BuiltInLayout: String, CaseIterable {
     case halfLeft       = "half_left"
     case halfRight      = "half_right"
@@ -92,6 +92,9 @@ enum BuiltInLayout: String, CaseIterable {
     case fullscreen     = "fullscreen"
     case center         = "center"
     case restore        = "restore"
+    case moveToMonitor1 = "move_to_monitor_1"
+    case moveToMonitor2 = "move_to_monitor_2"
+    case moveToMonitor3 = "move_to_monitor_3"
 
     var localizedName: String {
         switch self {
@@ -111,6 +114,9 @@ enum BuiltInLayout: String, CaseIterable {
         case .fullscreen:           return "전체화면"
         case .center:               return "화면 중앙"
         case .restore:              return "원래 크기 복원"
+        case .moveToMonitor1:       return "모니터 1로 이동"
+        case .moveToMonitor2:       return "모니터 2로 이동"
+        case .moveToMonitor3:       return "모니터 3로 이동"
         }
     }
 
@@ -134,6 +140,9 @@ enum BuiltInLayout: String, CaseIterable {
         case .fullscreen:           return ShortcutBinding(keyCode: 36,  modifiers: ctrlOpt) // Return
         case .center:               return ShortcutBinding(keyCode: 8,   modifiers: ctrlOpt) // C
         case .restore:              return ShortcutBinding(keyCode: 51,  modifiers: ctrlOpt) // Delete
+        case .moveToMonitor1:       return ShortcutBinding(keyCode: 18,  modifiers: ctrlOpt) // 1
+        case .moveToMonitor2:       return ShortcutBinding(keyCode: 19,  modifiers: ctrlOpt) // 2
+        case .moveToMonitor3:       return ShortcutBinding(keyCode: 20,  modifiers: ctrlOpt) // 3
         }
     }
 
@@ -157,6 +166,8 @@ enum BuiltInLayout: String, CaseIterable {
         case .fullscreen:           return RelativeFrame(x: 0,          y: 0,   width: 1,          height: 1)
         case .center:               return RelativeFrame(x: 0,          y: 0,   width: 0,          height: 0) // 특수: 크기 유지
         case .restore:              return RelativeFrame(x: 0,          y: 0,   width: 0,          height: 0) // 특수: 복원
+        case .moveToMonitor1, .moveToMonitor2, .moveToMonitor3:
+            return RelativeFrame(x: 0, y: 0, width: 0, height: 0) // 특수: 모니터 인덱스로 이동
         }
     }
 
@@ -206,6 +217,9 @@ enum KeyCodeHelper {
         case 46: return "M"
         case 51: return "⌫"
         case 53: return "⎋"
+        case 18: return "1"
+        case 19: return "2"
+        case 20: return "3"
         case 123: return "←"
         case 124: return "→"
         case 125: return "↓"

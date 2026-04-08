@@ -158,14 +158,12 @@ final class DragMonitor: @unchecked Sendable {
         currentTriggerZone = nil
         previewScreen = nil
 
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
             SnapPreviewWindow.shared.hide()
+            guard let self, let zone, let screen else { return }
+            let snapSettings = AppSettings.shared
+            self.executeSnapForZone(zone: zone, screen: screen, settings: snapSettings)
         }
-
-        guard let zone, let screen else { return }
-
-        // 스냅 실행
-        executeSnapForZone(zone: zone, screen: screen, settings: settings)
     }
 
     // MARK: - Preview

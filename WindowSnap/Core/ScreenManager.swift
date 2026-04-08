@@ -33,11 +33,19 @@ final class ScreenManager: @unchecked Sendable {
         screens.count > 1
     }
 
-    /// 마우스 커서 위치가 속하는 모니터를 반환
+    /// 마우스 커서 위치가 속하는 모니터를 반환 (`NSScreen.screens` 직접 사용 — 캐시와 불일치 방지)
     func screenContaining(mouseLocation: CGPoint) -> NSScreen? {
-        screens.first { screen in
+        NSScreen.screens.first { screen in
             screen.frame.contains(mouseLocation)
         }
+    }
+
+    /// 모니터 1…N (`NSScreen.screens` 순서). 요청 인덱스가 없으면 마지막 모니터로 클램프
+    func effectiveScreen(forOneBasedIndex index: Int) -> NSScreen? {
+        let list = NSScreen.screens
+        guard !list.isEmpty else { return NSScreen.main }
+        let clampedIndex = min(max(index, 1), list.count)
+        return list[clampedIndex - 1]
     }
 
     /// Step 2 (keyboard / menu): focused window’s screen via AX frame → bottom-left global → max intersection with `screen.frame`

@@ -33,6 +33,21 @@ final class WindowManager {
         return (window as! AXUIElement)
     }
 
+    /// 포커스 창을 `NSScreen.screens` 기준 N번째 모니터(없으면 마지막) 가용 영역 중앙으로 이동
+    func moveFocusedWindowToMonitor(oneBasedIndex: Int) {
+        guard let window = getFocusedWindow(),
+              let frame = getWindowFrame(window),
+              let screen = ScreenManager.shared.effectiveScreen(forOneBasedIndex: oneBasedIndex) else { return }
+        let settings = AppSettings.shared
+        storeOriginalFrameIfNeeded(for: window)
+        let centeredFrame = SnapCalculator.shared.calculateCenterFrame(
+            windowSize: frame.size,
+            on: screen,
+            settings: settings
+        )
+        setWindowFrame(window, frame: centeredFrame)
+    }
+
     /// 창을 지정된 레이아웃 프리셋과 화면 프레임으로 스냅
     func snapWindow(_ window: AXUIElement, to layout: LayoutPreset, on screen: NSScreen) {
         let targetFrame = SnapCalculator.shared.calculateAbsoluteFrame(
