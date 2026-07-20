@@ -79,6 +79,27 @@ final class MenuBarController {
 
         menu.addItem(.separator())
 
+        // 클립보드 이미지 저장
+        let saveClipboardItem = NSMenuItem(
+            title: "클립보드 이미지 저장",
+            action: #selector(saveClipboardImage),
+            keyEquivalent: ""
+        )
+        saveClipboardItem.target = self
+        saveClipboardItem.toolTip = AppSettings.shared.clipboardSaveShortcut().displayString
+        menu.addItem(saveClipboardItem)
+
+        // 저장 폴더 열기
+        let openSaveFolderItem = NSMenuItem(
+            title: "저장 폴더 열기",
+            action: #selector(openClipboardSaveFolder),
+            keyEquivalent: ""
+        )
+        openSaveFolderItem.target = self
+        menu.addItem(openSaveFolderItem)
+
+        menu.addItem(.separator())
+
         // 환경설정
         let preferencesItem = NSMenuItem(
             title: "환경설정...",
@@ -242,6 +263,14 @@ final class MenuBarController {
               let screen = getActiveScreen(for: window) else { return }
 
         WindowManager.shared.snapWindow(window, to: layout, on: screen)
+    }
+
+    @objc private func saveClipboardImage() {
+        ClipboardImageSaver.shared.saveClipboardImage()
+    }
+
+    @objc private func openClipboardSaveFolder() {
+        NSWorkspace.shared.open(ClipboardImageSaver.shared.saveDirectoryURL())
     }
 
     @objc private func openPreferences() {

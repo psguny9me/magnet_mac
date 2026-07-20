@@ -49,6 +49,21 @@ struct GeneralView: View {
                 }
             }
 
+            Section("클립보드 이미지 저장") {
+                HStack {
+                    Text("저장 폴더")
+                    Spacer()
+                    Text((settings.clipboardSaveDirectoryPath as NSString).abbreviatingWithTildeInPath)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                    Button("변경...") { chooseClipboardSaveDirectory() }
+                }
+                Text("단축키는 단축키 탭의 '클립보드 이미지 저장' 항목에서 변경할 수 있습니다.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             Section("기타") {
                 Toggle("Green Button 팝오버 메뉴", isOn: $settings.greenButtonMenuEnabled)
                 Toggle("전체화면 시 메뉴바 공간 제외", isOn: $settings.ignoreMenuBar)
@@ -57,6 +72,17 @@ struct GeneralView: View {
         }
         .formStyle(.grouped)
         .padding()
+    }
+
+    private func chooseClipboardSaveDirectory() {
+        let panel = NSOpenPanel()
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = false
+        panel.canCreateDirectories = true
+        panel.directoryURL = URL(fileURLWithPath: settings.clipboardSaveDirectoryPath, isDirectory: true)
+        if panel.runModal() == .OK, let url = panel.url {
+            settings.clipboardSaveDirectoryPath = url.path
+        }
     }
 
     private func handleMenuBarVisibility(isVisible: Bool) {

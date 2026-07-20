@@ -18,8 +18,8 @@ settings:
     CODE_SIGN_STYLE: Automatic
     PRODUCT_BUNDLE_IDENTIFIER: com.windowsnap.app
     PRODUCT_NAME: WindowSnap
-    MARKETING_VERSION: "1.0.0"
-    CURRENT_PROJECT_VERSION: "1"
+    MARKETING_VERSION: "1.1.0"
+    CURRENT_PROJECT_VERSION: "2"
     INFOPLIST_FILE: WindowSnap/Resources/Info.plist
     ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     CODE_SIGN_ENTITLEMENTS: WindowSnap/Resources/WindowSnap.entitlements
@@ -53,6 +53,8 @@ targets:
       # 순수 로직 테스트용 소스만 포함 (AppKit/NSApplication 의존성 최소화)
       - path: WindowSnapTests
       - path: WindowSnap/Core/Models/LayoutPreset.swift
+      - path: WindowSnap/Core/Models/AppShortcutAction.swift
+      - path: WindowSnap/Core/Models/ClipboardFileNaming.swift
       - path: WindowSnap/Core/SnapCalculator.swift
       - path: WindowSnap/Settings/AppSettings.swift
     settings:

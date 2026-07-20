@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
    LastUpgradeVersion = "1610"
-   version = "1.3">
+   version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
-      buildImplicitDependencies = "YES">
+      buildImplicitDependencies = "YES"
+      runPostActionsOnFailure = "NO">
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "NO"
             buildForRunning = "YES"
-            buildForProfiling = "YES"
+            buildForProfiling = "NO"
             buildForArchiving = "YES"
             buildForAnalyzing = "NO">
             <BuildableReference
@@ -29,7 +30,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "923404B388EA1A61CC6C20C7"
-               BuildableName = "WindowSnap.xctest"
+               BuildableName = "WindowSnapTests.xctest"
                BlueprintName = "WindowSnapTests"
                ReferencedContainer = "container:WindowSnap.xcodeproj">
             </BuildableReference>
@@ -40,12 +41,13 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      onlyGenerateCoverageForSpecifiedTargets = "NO">
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "923404B388EA1A61CC6C20C7"
-            BuildableName = "WindowSnap.xctest"
+            BuildableName = "WindowSnapTests.xctest"
             BlueprintName = "WindowSnapTests"
             ReferencedContainer = "container:WindowSnap.xcodeproj">
          </BuildableReference>
@@ -57,12 +59,14 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "923404B388EA1A61CC6C20C7"
-               BuildableName = "WindowSnap.xctest"
+               BuildableName = "WindowSnapTests.xctest"
                BlueprintName = "WindowSnapTests"
                ReferencedContainer = "container:WindowSnap.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -84,6 +88,8 @@
             ReferencedContainer = "container:WindowSnap.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

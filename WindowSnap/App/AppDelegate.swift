@@ -52,6 +52,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // 단축키 등록
         let presets = settings.makeBuiltInPresets() + settings.customLayouts
         KeyboardShortcutManager.shared.registerShortcuts(from: presets)
+        KeyboardShortcutManager.shared.registerActionShortcuts(settings.makeActionShortcutMap())
 
         // Accessibility 권한 있을 때만 이벤트 탭 시작
         if AXIsProcessTrusted() {
@@ -68,6 +69,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let settings = AppSettings.shared
         let presets = settings.makeBuiltInPresets() + settings.customLayouts
         KeyboardShortcutManager.shared.registerShortcuts(from: presets)
+        KeyboardShortcutManager.shared.registerActionShortcuts(settings.makeActionShortcutMap())
         KeyboardShortcutManager.shared.startListening()
         if settings.dragTriggerEnabled {
             DragMonitor.shared.startMonitoring()

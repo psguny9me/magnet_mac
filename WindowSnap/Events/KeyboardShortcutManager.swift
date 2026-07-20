@@ -32,6 +32,9 @@ final class KeyboardShortcutManager: @unchecked Sendable {
     /// 단축키 -> 레이아웃 매핑 테이블
     private var shortcutMap: [ShortcutBinding: LayoutPreset] = [:]
 
+    /// 단축키 -> 앱 액션(클립보드 이미지 저장 등) 매핑 테이블
+    private var actionMap: [ShortcutBinding: AppShortcutAction] = [:]
+
     /// CGEventTap 참조
     private var eventTap: CFMachPort?
 
@@ -55,6 +58,12 @@ final class KeyboardShortcutManager: @unchecked Sendable {
         if isEnabled { restartEventTap() }
     }
 
+    /// 앱 액션 단축키를 일괄 등록
+    func registerActionShortcuts(_ map: [ShortcutBinding: AppShortcutAction]) {
+        actionMap = map
+        if isEnabled { restartEventTap() }
+    }
+
     /// 이벤트 탭 활성화 (Accessibility 권한 필요)
     /// 탭 생성 실패 시 isEnabled는 false로 유지해 재시도 가능하게 함
     func startListening() {
@@ -72,11 +81,21 @@ final class KeyboardShortcutManager: @unchecked Sendable {
     }
 
     /// 단축키 충돌 여부 검사
-    func validateShortcut(_ shortcut: ShortcutBinding, excludingLayoutId: UUID?) throws {
+    func validateShortcut(
+        _ shortcut: ShortcutBinding,
+        excludingLayoutId: UUID?,
+        excludingActionId: String? = nil
+    ) throws {
         for (existingShortcut, existingLayout) in shortcutMap {
             guard existingLayout.id != excludingLayoutId else { continue }
             if existingShortcut == shortcut {
                 throw ShortcutConflictError.conflictWithExistingLayout(name: existingLayout.name)
+            }
+        }
+        for (existingShortcut, action) in actionMap {
+            guard action.rawValue != excludingActionId else { continue }
+            if existingShortcut == shortcut {
+                throw ShortcutConflictError.conflictWithExistingLayout(name: action.localizedName)
             }
         }
     }
@@ -145,6 +164,18 @@ final class KeyboardShortcutManager: @unchecked Sendable {
         let normalizedModifiers = rawModifiers & relevantFlags
 
         let normalizedShortcut = ShortcutBinding(keyCode: keyCode, modifiers: normalizedModifiers)
+
+        // 앱 액션 단축키 우선 처리
+        if let matchedAction = actionMap[normalizedShortcut] {
+            DispatchQueue.main.async {
+                switch matchedAction {
+                case .saveClipboardImage:
+                    ClipboardImageSaver.shared.saveClipboardImage()
+                }
+            }
+            // 이벤트 소비 (다른 앱으로 전달 안 함)
+            return nil
+        }
 
         guard let matchedLayout = shortcutMap.first(where: { $0.key == normalizedShortcut })?.value else {
             return Unmanaged.passRetained(event)

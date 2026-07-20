@@ -19,10 +19,15 @@ struct ShortcutsView: View {
     @State private var conflictMessage: String? = nil
 
     var shortcutRows: [ShortcutRowModel] {
-        BuiltInLayout.allCases.map { layout in
+        let layoutRows = BuiltInLayout.allCases.map { layout in
             let currentShortcut = settings.shortcutBindings[layout.rawValue] ?? layout.defaultShortcut
             return ShortcutRowModel(id: layout.rawValue, name: layout.localizedName, shortcut: currentShortcut)
         }
+        let actionRows = AppShortcutAction.allCases.map { action in
+            let currentShortcut = settings.shortcutBindings[action.rawValue] ?? action.defaultShortcut
+            return ShortcutRowModel(id: action.rawValue, name: action.localizedName, shortcut: currentShortcut)
+        }
+        return layoutRows + actionRows
     }
 
     var body: some View {
@@ -63,7 +68,11 @@ struct ShortcutsView: View {
     private func bindShortcut(_ shortcut: ShortcutBinding, for layoutId: String) {
         do {
             let existingUUID = UUID()
-            try KeyboardShortcutManager.shared.validateShortcut(shortcut, excludingLayoutId: existingUUID)
+            try KeyboardShortcutManager.shared.validateShortcut(
+                shortcut,
+                excludingLayoutId: existingUUID,
+                excludingActionId: AppShortcutAction(rawValue: layoutId)?.rawValue
+            )
             settings.shortcutBindings[layoutId] = shortcut
             conflictMessage = nil
             reloadShortcuts()
@@ -86,6 +95,7 @@ struct ShortcutsView: View {
     private func reloadShortcuts() {
         let presets = settings.makeBuiltInPresets() + settings.customLayouts
         KeyboardShortcutManager.shared.registerShortcuts(from: presets)
+        KeyboardShortcutManager.shared.registerActionShortcuts(settings.makeActionShortcutMap())
         MenuBarController.shared.rebuildMenu()
     }
 }

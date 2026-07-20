@@ -9,11 +9,14 @@
 /* Begin PBXBuildFile section */
 		13151BDFA86AAF443B56754C /* SnapCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E19830296B23F4AFB08855 /* SnapCalculator.swift */; };
 		17ED6AC9F3EAE1A026050CEA /* LayoutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC491806312694E9B22A02C6 /* LayoutsView.swift */; };
+		1EC4895506D3A13AEC19A0A5 /* ClipboardFileNamingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988CED8093A81E1A2B11174A /* ClipboardFileNamingTests.swift */; };
 		22B6530A70B0D8C7C546804D /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE460C029D5ACB4DA0EF292D /* WindowManager.swift */; };
 		23DA7A55E9DF6A7D6E782675 /* SnapCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E19830296B23F4AFB08855 /* SnapCalculator.swift */; };
 		28837CA6B2A6F4CFD4BD54AF /* GeneralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99769EDBBE03F0CEA7036CA /* GeneralView.swift */; };
+		2ED20ACBDECFA4DF83F560CD /* AppShortcutAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217EA8FA22A052D6CFEA6765 /* AppShortcutAction.swift */; };
 		34710EDE3FB39D20B6F7D8B0 /* DragMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F026454B3E46E7DDE91500 /* DragMonitor.swift */; };
 		3D12EB7CC00603AECF174162 /* LayoutPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC63315ECDA26BC338407D1F /* LayoutPreset.swift */; };
+		4553AC0D349642D02206FA5D /* ToastWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11600075661FAEEBC5664165 /* ToastWindow.swift */; };
 		654220686099861963192689 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620D2A0473C08BC524DE8F92 /* AppSettings.swift */; };
 		6BE3733078275AB038AEBDE0 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF44957E14302CDE873844D5 /* OnboardingView.swift */; };
 		6FDD1CBD776DCBAB9E2E7048 /* ShortcutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FFBF605FBE458F8FB52C8C /* ShortcutsView.swift */; };
@@ -22,7 +25,11 @@
 		8DC97CD06B84842FCE230E9C /* KeyboardShortcutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7D43CDC387CADD86E43867 /* KeyboardShortcutManager.swift */; };
 		94BA76A876E5FCB5AA64D2F6 /* WindowSnapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDEB4E730FFAC28D2454CBD7 /* WindowSnapApp.swift */; };
 		95DE26076087DD390D68BD9C /* LayoutPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC63315ECDA26BC338407D1F /* LayoutPreset.swift */; };
+		B7B219B79F119CD4F399CC43 /* ClipboardImageSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFB596B42156B03F08E9BED /* ClipboardImageSaver.swift */; };
 		BB82795F28454BF1F8D5D14B /* AppSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4826365C0703FCA14AD6AA /* AppSettingsTests.swift */; };
+		BDA82F39996AC73499CCAFB5 /* ClipboardFileNaming.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75418FD423E1D08C4E76E9CC /* ClipboardFileNaming.swift */; };
+		C826DC35FD0F960CA503AEDB /* AppShortcutAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217EA8FA22A052D6CFEA6765 /* AppShortcutAction.swift */; };
+		D4C53E10CA7761036C2611B8 /* ClipboardFileNaming.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75418FD423E1D08C4E76E9CC /* ClipboardFileNaming.swift */; };
 		D55020204696EE6D2DCF5978 /* MenuBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C1DFFCC39A4E85F07A530 /* MenuBarController.swift */; };
 		DD7AC27E1B080CBC60B8B78E /* LayoutPresetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82AEC56531A7838AE6EC409 /* LayoutPresetTests.swift */; };
 		E37301C47AA7D9DC1C5271EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1703EE5AA4888EB4F5BE52 /* AppDelegate.swift */; };
@@ -35,13 +42,18 @@
 /* Begin PBXFileReference section */
 		049C1DFFCC39A4E85F07A530 /* MenuBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarController.swift; sourceTree = "<group>"; };
 		0B39F78AAD4D333C4A7DC5F3 /* SnapCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapCalculatorTests.swift; sourceTree = "<group>"; };
+		11600075661FAEEBC5664165 /* ToastWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastWindow.swift; sourceTree = "<group>"; };
 		12D01CE4039D9111672CBF08 /* WindowSnap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WindowSnap.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		217EA8FA22A052D6CFEA6765 /* AppShortcutAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppShortcutAction.swift; sourceTree = "<group>"; };
+		2EFB596B42156B03F08E9BED /* ClipboardImageSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardImageSaver.swift; sourceTree = "<group>"; };
 		40E19830296B23F4AFB08855 /* SnapCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapCalculator.swift; sourceTree = "<group>"; };
 		43DDFDE9A9339E728B7DC4CF /* AdvancedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedView.swift; sourceTree = "<group>"; };
 		61FFBF605FBE458F8FB52C8C /* ShortcutsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsView.swift; sourceTree = "<group>"; };
 		620D2A0473C08BC524DE8F92 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		75418FD423E1D08C4E76E9CC /* ClipboardFileNaming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardFileNaming.swift; sourceTree = "<group>"; };
 		8B97349D7D5DD9D5A1291126 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D96E029BEA440EFEDE48B70 /* SnapPreviewWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapPreviewWindow.swift; sourceTree = "<group>"; };
+		988CED8093A81E1A2B11174A /* ClipboardFileNamingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardFileNamingTests.swift; sourceTree = "<group>"; };
 		9C1703EE5AA4888EB4F5BE52 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AC491806312694E9B22A02C6 /* LayoutsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutsView.swift; sourceTree = "<group>"; };
 		AE7D43CDC387CADD86E43867 /* KeyboardShortcutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardShortcutManager.swift; sourceTree = "<group>"; };
@@ -80,6 +92,7 @@
 			children = (
 				049C1DFFCC39A4E85F07A530 /* MenuBarController.swift */,
 				8D96E029BEA440EFEDE48B70 /* SnapPreviewWindow.swift */,
+				11600075661FAEEBC5664165 /* ToastWindow.swift */,
 				15CC51DCC0B7B6DCCD6A48F9 /* Onboarding */,
 				A18DFCF83FC244791E1176E4 /* Preferences */,
 			);
@@ -89,6 +102,8 @@
 		4C1701AA2B82EF509460BA3B /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				217EA8FA22A052D6CFEA6765 /* AppShortcutAction.swift */,
+				75418FD423E1D08C4E76E9CC /* ClipboardFileNaming.swift */,
 				CC63315ECDA26BC338407D1F /* LayoutPreset.swift */,
 			);
 			path = Models;
@@ -105,6 +120,7 @@
 		751E02ED32AE3A25B069831C /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				2EFB596B42156B03F08E9BED /* ClipboardImageSaver.swift */,
 				DDAF86C6B23CFC695EB2294F /* ScreenManager.swift */,
 				40E19830296B23F4AFB08855 /* SnapCalculator.swift */,
 				FE460C029D5ACB4DA0EF292D /* WindowManager.swift */,
@@ -178,6 +194,7 @@
 			isa = PBXGroup;
 			children = (
 				ED4826365C0703FCA14AD6AA /* AppSettingsTests.swift */,
+				988CED8093A81E1A2B11174A /* ClipboardFileNamingTests.swift */,
 				E82AEC56531A7838AE6EC409 /* LayoutPresetTests.swift */,
 				0B39F78AAD4D333C4A7DC5F3 /* SnapCalculatorTests.swift */,
 			);
@@ -266,6 +283,9 @@
 				F8195E4079EC2EF2AAFA42DE /* AdvancedView.swift in Sources */,
 				E37301C47AA7D9DC1C5271EE /* AppDelegate.swift in Sources */,
 				EDDDE692465866EFD043CBDA /* AppSettings.swift in Sources */,
+				2ED20ACBDECFA4DF83F560CD /* AppShortcutAction.swift in Sources */,
+				BDA82F39996AC73499CCAFB5 /* ClipboardFileNaming.swift in Sources */,
+				B7B219B79F119CD4F399CC43 /* ClipboardImageSaver.swift in Sources */,
 				34710EDE3FB39D20B6F7D8B0 /* DragMonitor.swift in Sources */,
 				28837CA6B2A6F4CFD4BD54AF /* GeneralView.swift in Sources */,
 				8DC97CD06B84842FCE230E9C /* KeyboardShortcutManager.swift in Sources */,
@@ -278,6 +298,7 @@
 				6FDD1CBD776DCBAB9E2E7048 /* ShortcutsView.swift in Sources */,
 				23DA7A55E9DF6A7D6E782675 /* SnapCalculator.swift in Sources */,
 				6FEB4B42708F8ADEA972EFB0 /* SnapPreviewWindow.swift in Sources */,
+				4553AC0D349642D02206FA5D /* ToastWindow.swift in Sources */,
 				22B6530A70B0D8C7C546804D /* WindowManager.swift in Sources */,
 				94BA76A876E5FCB5AA64D2F6 /* WindowSnapApp.swift in Sources */,
 			);
@@ -289,6 +310,9 @@
 			files = (
 				654220686099861963192689 /* AppSettings.swift in Sources */,
 				BB82795F28454BF1F8D5D14B /* AppSettingsTests.swift in Sources */,
+				C826DC35FD0F960CA503AEDB /* AppShortcutAction.swift in Sources */,
+				D4C53E10CA7761036C2611B8 /* ClipboardFileNaming.swift in Sources */,
+				1EC4895506D3A13AEC19A0A5 /* ClipboardFileNamingTests.swift in Sources */,
 				3D12EB7CC00603AECF174162 /* LayoutPreset.swift in Sources */,
 				DD7AC27E1B080CBC60B8B78E /* LayoutPresetTests.swift in Sources */,
 				13151BDFA86AAF443B56754C /* SnapCalculator.swift in Sources */,
@@ -370,7 +394,7 @@
 				CODE_SIGN_ENTITLEMENTS = WindowSnap/Resources/WindowSnap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -392,7 +416,7 @@
 				INFOPLIST_FILE = WindowSnap/Resources/Info.plist;
 				LSUIElement = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -461,7 +485,7 @@
 				CODE_SIGN_ENTITLEMENTS = WindowSnap/Resources/WindowSnap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -478,7 +502,7 @@
 				INFOPLIST_FILE = WindowSnap/Resources/Info.plist;
 				LSUIElement = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;

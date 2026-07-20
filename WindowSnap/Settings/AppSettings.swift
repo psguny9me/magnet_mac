@@ -19,6 +19,7 @@ enum SettingsKey: String {
     case customLayouts          = "customLayouts"
     case shortcutBindings       = "shortcutBindings"
     case hasCompletedOnboarding = "hasCompletedOnboarding"
+    case clipboardSaveDirectory = "clipboardSaveDirectory"
 }
 
 // MARK: - AppSettings
@@ -100,6 +101,30 @@ final class AppSettings {
         didSet { saveShortcutBindings() }
     }
 
+    // MARK: - Clipboard Image Save
+
+    /// 클립보드 이미지 저장 폴더 경로 (기본: 데스크탑)
+    var clipboardSaveDirectoryPath: String = AppSettings.defaultClipboardSaveDirectoryPath {
+        didSet { saveString(clipboardSaveDirectoryPath, for: .clipboardSaveDirectory) }
+    }
+
+    /// 기본 저장 폴더 경로 (데스크탑)
+    static var defaultClipboardSaveDirectoryPath: String {
+        FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first?.path
+            ?? (NSHomeDirectory() as NSString).appendingPathComponent("Desktop")
+    }
+
+    /// 클립보드 이미지 저장 단축키 (사용자 커스터마이징 반영)
+    func clipboardSaveShortcut() -> ShortcutBinding {
+        shortcutBindings[AppShortcutAction.saveClipboardImage.rawValue]
+            ?? AppShortcutAction.saveClipboardImage.defaultShortcut
+    }
+
+    /// 액션 단축키 매핑 테이블 생성
+    func makeActionShortcutMap() -> [ShortcutBinding: AppShortcutAction] {
+        [clipboardSaveShortcut(): .saveClipboardImage]
+    }
+
     // MARK: - Onboarding
 
     /// 온보딩 완료 여부
@@ -145,6 +170,8 @@ final class AppSettings {
         let rawThirdRatio = defaults.object(forKey: SettingsKey.thirdRatio.rawValue) as? Double ?? (1.0 / 3.0)
         thirdRatio             = max(0.2, min(0.45, rawThirdRatio))
         hasCompletedOnboarding = defaults.object(forKey: SettingsKey.hasCompletedOnboarding.rawValue) as? Bool ?? false
+        clipboardSaveDirectoryPath = defaults.string(forKey: SettingsKey.clipboardSaveDirectory.rawValue)
+            ?? AppSettings.defaultClipboardSaveDirectoryPath
         loadCustomLayouts()
         loadShortcutBindings()
     }
@@ -178,6 +205,10 @@ final class AppSettings {
     }
 
     private func saveDouble(_ value: Double, for key: SettingsKey) {
+        UserDefaults.standard.set(value, forKey: key.rawValue)
+    }
+
+    private func saveString(_ value: String, for key: SettingsKey) {
         UserDefaults.standard.set(value, forKey: key.rawValue)
     }
 
