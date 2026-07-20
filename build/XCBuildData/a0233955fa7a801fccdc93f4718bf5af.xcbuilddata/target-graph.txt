@@ -1,4 +1,0 @@
-Target dependency graph (2 targets)
-Target 'WindowSnapTests' in project 'WindowSnap'
-➜ Explicit dependency on target 'WindowSnap' in project 'WindowSnap'
-Target 'WindowSnap' in project 'WindowSnap' (no dependencies)
