@@ -142,10 +142,16 @@ final class DragMonitor: @unchecked Sendable {
             threshold: threshold
         )
 
-        // 트리거 영역 진입/변경 시에만 업데이트 (불필요한 렌더링 방지)
-        if newTriggerZone != currentTriggerZone {
+        let previewTarget = newTriggerZone != nil ? screen : nil
+        let screenChangedWhileInZone: Bool = {
+            guard newTriggerZone != nil, let previous = previewScreen else { return false }
+            return previous.frame != screen.frame
+        }()
+
+        // 트리거 종류가 바뀌거나, 같은 종류라도 커서가 다른 모니터로 옮겨진 경우 갱신
+        if newTriggerZone != currentTriggerZone || screenChangedWhileInZone {
             currentTriggerZone = newTriggerZone
-            previewScreen = newTriggerZone != nil ? screen : nil
+            previewScreen = previewTarget
             updatePreview(zone: newTriggerZone, screen: screen, settings: settings)
         }
     }
