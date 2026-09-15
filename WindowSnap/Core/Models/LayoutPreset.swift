@@ -4,6 +4,7 @@ import AppKit // NSEvent.ModifierFlags 사용을 위해 필요
 // MARK: - RelativeFrame
 
 /// 화면 대비 상대 비율로 표현한 창 프레임 (0.0 ~ 1.0)
+/// 좌상단 원점 기준이다(y=0이 화면 위쪽). SnapCalculator가 넘기는 화면 프레임이 AX 좌표계(좌상단, y 아래)이기 때문이다.
 struct RelativeFrame: Codable, Equatable {
     var x: Double
     var y: Double
@@ -12,7 +13,7 @@ struct RelativeFrame: Codable, Equatable {
 
     static let zero = RelativeFrame(x: 0, y: 0, width: 0, height: 0)
 
-    /// 절대 픽셀 좌표로 변환 (macOS는 좌하단 원점 사용)
+    /// 절대 좌표로 변환. screenFrame과 같은 좌표계(AX 좌상단 원점)로 결과를 돌려준다
     func toAbsoluteFrame(in screenFrame: CGRect) -> CGRect {
         let absoluteX = screenFrame.origin.x + x * screenFrame.width
         let absoluteY = screenFrame.origin.y + y * screenFrame.height
@@ -146,18 +147,18 @@ enum BuiltInLayout: String, CaseIterable {
         }
     }
 
-    /// 기본 RelativeFrame (비율은 AppSettings에서 커스터마이징 가능)
+    /// 기본 RelativeFrame (비율은 AppSettings에서 커스터마이징 가능). y는 좌상단 기준(0 = 위쪽)
     func makeRelativeFrame(halfRatio: Double = 0.5, thirdRatio: Double = 1.0 / 3.0) -> RelativeFrame {
         let twoThird = 1.0 - thirdRatio
         switch self {
         case .halfLeft:             return RelativeFrame(x: 0,          y: 0,   width: halfRatio,  height: 1)
         case .halfRight:            return RelativeFrame(x: halfRatio,  y: 0,   width: 1 - halfRatio, height: 1)
-        case .halfTop:              return RelativeFrame(x: 0,          y: 0.5, width: 1,          height: 0.5)
-        case .halfBottom:           return RelativeFrame(x: 0,          y: 0,   width: 1,          height: 0.5)
-        case .quarterTopLeft:       return RelativeFrame(x: 0,          y: 0.5, width: halfRatio,  height: 0.5)
-        case .quarterTopRight:      return RelativeFrame(x: halfRatio,  y: 0.5, width: 1 - halfRatio, height: 0.5)
-        case .quarterBottomLeft:    return RelativeFrame(x: 0,          y: 0,   width: halfRatio,  height: 0.5)
-        case .quarterBottomRight:   return RelativeFrame(x: halfRatio,  y: 0,   width: 1 - halfRatio, height: 0.5)
+        case .halfTop:              return RelativeFrame(x: 0,          y: 0,   width: 1,          height: 0.5)
+        case .halfBottom:           return RelativeFrame(x: 0,          y: 0.5, width: 1,          height: 0.5)
+        case .quarterTopLeft:       return RelativeFrame(x: 0,          y: 0,   width: halfRatio,  height: 0.5)
+        case .quarterTopRight:      return RelativeFrame(x: halfRatio,  y: 0,   width: 1 - halfRatio, height: 0.5)
+        case .quarterBottomLeft:    return RelativeFrame(x: 0,          y: 0.5, width: halfRatio,  height: 0.5)
+        case .quarterBottomRight:   return RelativeFrame(x: halfRatio,  y: 0.5, width: 1 - halfRatio, height: 0.5)
         case .thirdLeft:            return RelativeFrame(x: 0,          y: 0,   width: thirdRatio, height: 1)
         case .thirdCenter:          return RelativeFrame(x: thirdRatio, y: 0,   width: thirdRatio, height: 1)
         case .thirdRight:           return RelativeFrame(x: twoThird,   y: 0,   width: thirdRatio, height: 1)

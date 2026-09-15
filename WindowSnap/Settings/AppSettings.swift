@@ -225,6 +225,8 @@ final class AppSettings {
     // MARK: - Launch At Login
 
     private func applyLaunchAtLogin() {
+        // 단위 테스트(xctest)나 명령줄 도구가 이 파일을 링크해도 로그인 항목에 등록되지 않도록 번들 앱에서만 수행
+        guard Bundle.main.bundleURL.pathExtension == "app" else { return }
         do {
             if launchAtLogin {
                 try SMAppService.mainApp.register()

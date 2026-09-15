@@ -150,6 +150,11 @@ final class KeyboardShortcutManager: @unchecked Sendable {
         type: CGEventType,
         event: CGEvent
     ) -> Unmanaged<CGEvent>? {
+        // 콜백이 오래 걸리면 시스템이 탭을 끄고 이 이벤트로 알려 준다. 다시 켜지 않으면 단축키가 영구히 멈춘다
+        if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
+            if let tap = eventTap { CGEvent.tapEnable(tap: tap, enable: true) }
+            return Unmanaged.passRetained(event)
+        }
         guard type == .keyDown else { return Unmanaged.passRetained(event) }
 
         let keyCode = UInt16(event.getIntegerValueField(.keyboardEventKeycode))

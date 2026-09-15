@@ -60,14 +60,28 @@ final class WindowManager {
     }
 
     /// 창을 지정된 절대 프레임으로 이동/리사이즈
+    ///
+    /// 순서가 중요하다: 위치를 먼저 옮기면 목표보다 큰 창이 화면 경계를 넘어가고,
+    /// 그 상태에서 경계에 맞닿는 크기 요청은 AppKit이 (성공을 반환하면서) 무시한다.
+    /// 그래서 1) 목표보다 조금 작게 줄여 화면 안에 들게 한 뒤 2) 이동하고 3) 정확한 크기를 적용한다.
     func setWindowFrame(_ window: AXUIElement, frame: CGRect) {
         var position = frame.origin
         var size = frame.size
+        // 이미 경계에 걸쳐 있는 창은 경계에 정확히 맞는 첫 크기 요청도 무시되므로 여유를 둔다
+        var shrunkSize = CGSize(
+            width: max(frame.width - Self.preShrinkInset, 1),
+            height: max(frame.height - Self.preShrinkInset, 1)
+        )
         guard let posValue = AXValueCreate(.cgPoint, &position),
-              let sizeValue = AXValueCreate(.cgSize, &size) else { return }
+              let sizeValue = AXValueCreate(.cgSize, &size),
+              let shrunkValue = AXValueCreate(.cgSize, &shrunkSize) else { return }
+        AXUIElementSetAttributeValue(window, kAXSizeAttribute as CFString, shrunkValue)
         AXUIElementSetAttributeValue(window, kAXPositionAttribute as CFString, posValue)
         AXUIElementSetAttributeValue(window, kAXSizeAttribute as CFString, sizeValue)
     }
+
+    /// 첫 번째 크기 설정에서 목표보다 줄여 두는 여유(pt). 실측상 경계에서 약 20~40pt 이내 요청은 무시된다.
+    private static let preShrinkInset: CGFloat = 50
 
     /// 창의 현재 프레임(CGRect)을 읽어서 반환
     func getWindowFrame(_ window: AXUIElement) -> CGRect? {

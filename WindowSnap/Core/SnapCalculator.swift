@@ -35,7 +35,7 @@ enum SnapTriggerZone {
 /// Multi-monitor snap pipeline (see also `ScreenManager`):
 /// - Step 1: `ScreenManager.isMultiMonitor` — whether `screens.count > 1` (diagnostics / branching).
 /// - Step 2: Target `NSScreen` — keyboard/menu use focused window (`screenForSnap`); drag uses cursor (`screenContaining(mouseLocation:)`).
-/// - Step 3: This type converts that screen’s `frame` / `visibleFrame` (bottom-left global) to AX space using `NSScreen.main` as the kAXPosition Y reference (menu bar screen), then `LayoutPreset.toAbsoluteFrame(in:)`.
+/// - Step 3: This type converts that screen’s `frame` / `visibleFrame` (bottom-left global) to AX space using `NSScreen.screens[0]` (the primary/menu bar screen, origin (0,0)) as the kAXPosition Y reference, then `LayoutPreset.toAbsoluteFrame(in:)`.
 final class SnapCalculator {
 
     // MARK: - Singleton
@@ -178,9 +178,10 @@ final class SnapCalculator {
 
     // MARK: - Coordinate System Conversion
 
-    /// Bottom-edge Y of the menu bar screen in NSScreen global coords (Y up). Matches kAXPosition (0,0) = top-left of that screen.
+    /// Top edge (maxY) of the primary screen in NSScreen global coords (Y up). kAXPosition (0,0) is the top-left of that screen.
+    /// `NSScreen.screens[0]` is always the primary (menu bar) screen; `NSScreen.main` is the keyboard-focus screen and must not be used here.
     private func menuBarScreenMaxYBottomLeftGlobal() -> CGFloat? {
-        NSScreen.main?.frame.maxY
+        NSScreen.screens.first?.frame.maxY
     }
 
     /// NSScreen.frame / visibleFrame(좌하단 원점 글로벌) -> AX kAXPosition/kAXSize용 (좌상단 원점, Y 아래)

@@ -92,6 +92,54 @@ final class SnapCalculatorTests: XCTestCase {
         XCTAssertEqual(outputBottomLeftGlobal.height, inputBottomLeftGlobal.height, accuracy: 0.01)
     }
 
+    // MARK: - 상하 방향 회귀 테스트 (AX 좌상단 프레임 기준, y=0이 화면 위쪽)
+
+    /// 메뉴바 25pt를 제외한 LG 4K 가용 영역을 AX 좌표로 표현한 값
+    private let axScreenFrame = CGRect(x: 0, y: 25, width: 3360, height: 1865)
+
+    func testHalfTopIsPlacedAtTopOfScreen() {
+        let frame = BuiltInLayout.halfTop.makeLayoutPreset().frame.toAbsoluteFrame(in: axScreenFrame)
+        XCTAssertEqual(frame.minY, axScreenFrame.minY, accuracy: 0.01)
+        XCTAssertEqual(frame.height, axScreenFrame.height / 2, accuracy: 0.01)
+    }
+
+    func testHalfBottomIsPlacedAtBottomOfScreen() {
+        let frame = BuiltInLayout.halfBottom.makeLayoutPreset().frame.toAbsoluteFrame(in: axScreenFrame)
+        XCTAssertEqual(frame.minY, axScreenFrame.midY, accuracy: 0.01)
+        XCTAssertEqual(frame.maxY, axScreenFrame.maxY, accuracy: 0.01)
+    }
+
+    func testQuarterTopLeftIsPlacedAtTopLeftCorner() {
+        let frame = BuiltInLayout.quarterTopLeft.makeLayoutPreset().frame.toAbsoluteFrame(in: axScreenFrame)
+        XCTAssertEqual(frame.origin.x, axScreenFrame.minX, accuracy: 0.01)
+        XCTAssertEqual(frame.origin.y, axScreenFrame.minY, accuracy: 0.01)
+    }
+
+    func testQuarterBottomRightIsPlacedAtBottomRightCorner() {
+        let frame = BuiltInLayout.quarterBottomRight.makeLayoutPreset().frame.toAbsoluteFrame(in: axScreenFrame)
+        XCTAssertEqual(frame.maxX, axScreenFrame.maxX, accuracy: 0.01)
+        XCTAssertEqual(frame.maxY, axScreenFrame.maxY, accuracy: 0.01)
+    }
+
+    // MARK: - AX 원점 기준 테스트 (주 화면 = NSScreen.screens[0])
+
+    /// 주 화면 프레임의 AX 변환 결과는 원점 (0,0)이어야 한다. 키보드 포커스 화면(NSScreen.main)과 무관해야 한다
+    func testPrimaryScreenFrameConvertsToAXOrigin() throws {
+        let primary = try XCTUnwrap(NSScreen.screens.first)
+        let axRect = calculator.convertToTopLeftOrigin(frame: primary.frame, screen: primary)
+        XCTAssertEqual(axRect.origin.x, 0, accuracy: 0.01)
+        XCTAssertEqual(axRect.origin.y, 0, accuracy: 0.01)
+    }
+
+    /// 주 화면 아래쪽에 놓인 보조 화면(예: 좌하단 글로벌 y가 음수)은 AX y가 주 화면 높이보다 커야 한다
+    func testSecondaryScreenBelowPrimaryConvertsBelowInAXSpace() throws {
+        let primary = try XCTUnwrap(NSScreen.screens.first)
+        let secondaryBottomLeft = CGRect(x: 100, y: -600, width: 800, height: 600) // 주 화면 바로 아래
+        let axRect = calculator.convertToTopLeftOrigin(frame: secondaryBottomLeft, screen: primary)
+        XCTAssertEqual(axRect.origin.y, primary.frame.maxY, accuracy: 0.01)
+        XCTAssertEqual(axRect.origin.x, 100, accuracy: 0.01)
+    }
+
 }
 
 // MARK: - SnapCalculator Trigger Zone Tests (requires NSScreen)

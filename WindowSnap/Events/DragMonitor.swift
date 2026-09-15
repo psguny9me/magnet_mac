@@ -107,6 +107,11 @@ final class DragMonitor: @unchecked Sendable {
     // MARK: - Event Handling
 
     private func handleMouseEvent(type: CGEventType, event: CGEvent) {
+        // 콜백이 오래 걸리면 시스템이 탭을 끄고 이 이벤트로 알려 준다. 다시 켜지 않으면 드래그 감지가 영구히 멈춘다
+        if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
+            if let tap = eventTap { CGEvent.tapEnable(tap: tap, enable: true) }
+            return
+        }
         let settings = AppSettings.shared
         guard settings.dragTriggerEnabled else { return }
 
@@ -179,16 +184,18 @@ final class DragMonitor: @unchecked Sendable {
         let halfRatio = settings.halfRatio
         let thirdRatio = settings.thirdRatio
         // NSScreen은 Sendable이 아니므로 스냅 프레임을 미리 계산
+        // calculateAbsoluteFrame은 AX(좌상단) 좌표를 돌려주고, NSWindow.setFrame은 좌하단 글로벌 좌표를 받으므로 변환한다
         let previewFrame: CGRect? = zone.map { z in
             let previewLayout = z.builtInLayout.makeLayoutPreset(
                 halfRatio: halfRatio,
                 thirdRatio: thirdRatio
             )
-            return SnapCalculator.shared.calculateAbsoluteFrame(
+            let axFrame = SnapCalculator.shared.calculateAbsoluteFrame(
                 for: previewLayout,
                 on: screen,
                 settings: settings
             )
+            return SnapCalculator.shared.convertAXFrameToBottomLeftGlobal(axFrame)
         }
         DispatchQueue.main.async {
             guard let frame = previewFrame, snapPreviewEnabled else {
