@@ -37,9 +37,6 @@ targets:
       - path: WindowSnap
         excludes:
           - "**/*.entitlements"
-          - Resources/Assets.xcassets
-    resources:
-      - path: WindowSnap/Resources/Assets.xcassets
     settings:
       base:
         INFOPLIST_FILE: WindowSnap/Resources/Info.plist

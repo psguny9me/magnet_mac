@@ -56,6 +56,14 @@ xcodebuild -project WindowSnap.xcodeproj -scheme WindowSnap -configuration Debug
 
 권한 거부 시: **시스템 설정 → 개인정보 보호 및 보안 → 손쉬운 사용**에서 앱을 허용하세요.
 
+## 앱 아이콘
+
+앱 아이콘은 `scripts/generate_app_icon.swift`가 CoreGraphics로 직접 그려 생성합니다. 디자인을 바꾼 뒤에는 다음 명령으로 `AppIcon.appiconset`의 PNG를 다시 만듭니다.
+
+```bash
+swift scripts/generate_app_icon.swift
+```
+
 ## 개인용 배포 패키지(ZIP)
 
 Release 빌드 후 ZIP을 만드는 스크립트:
