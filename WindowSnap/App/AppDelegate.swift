@@ -11,6 +11,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// 온보딩 창 (완료 시 직접 닫기 위해 보관)
     private var onboardingWindow: NSWindow?
 
+    /// 환경설정 창 (하나만 만들어 재사용)
+    private var preferencesWindow: NSWindow?
+
     // MARK: - Application Lifecycle
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -86,6 +89,24 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         window.center()
         window.makeKeyAndOrderFront(nil)
         onboardingWindow = window
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    // MARK: - Settings Window
+
+    /// 환경설정 창을 연다. 이미 만들어 둔 창이 있으면 앞으로 가져오기만 한다.
+    /// 메뉴바에서 응답자 체인 액션으로 호출되므로 @objc 시그니처를 유지한다
+    @objc func showPreferencesWindow(_ sender: Any?) {
+        if preferencesWindow == nil {
+            let hostingController = NSHostingController(rootView: PreferencesView())
+            let window = NSWindow(contentViewController: hostingController)
+            window.title = "환경설정"
+            window.styleMask = [.titled, .closable]
+            window.isReleasedWhenClosed = false
+            window.center()
+            preferencesWindow = window
+        }
+        preferencesWindow?.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
     }
 

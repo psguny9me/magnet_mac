@@ -267,9 +267,11 @@ final class MenuBarController {
     }
 
     @objc private func openPreferences() {
-        // SwiftUI `Settings` 씬의 창을 연다 (macOS 14+). 별도 NSWindow를 만들지 않아 환경설정 창이 하나만 존재한다
-        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-        NSApp.activate(ignoringOtherApps: true)
+        // 메뉴바 전용 앱(LSUIElement)에서는 SwiftUI Settings 씬을 여는 showSettingsWindow: 액션이 동작하지 않는 경우가 있어
+        // AppDelegate가 관리하는 단일 환경설정 창을 연다.
+        // 주의: @NSApplicationDelegateAdaptor 환경에서는 NSApp.delegate가 SwiftUI의 델리게이트라 캐스트할 수 없으므로
+        // 응답자 체인으로 액션을 보낸다 (SwiftUI 델리게이트가 우리 AppDelegate로 전달한다)
+        NSApp.sendAction(#selector(AppDelegate.showPreferencesWindow(_:)), to: nil, from: nil)
     }
 
     @objc private func openAbout() {
