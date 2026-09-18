@@ -11,7 +11,6 @@ enum SettingsKey: String {
     case dragTriggerEnabled     = "dragTriggerEnabled"
     case dragTriggerThreshold   = "dragTriggerThreshold"
     case snapPreviewEnabled     = "snapPreviewEnabled"
-    case greenButtonMenuEnabled = "greenButtonMenuEnabled"
     case ignoreMenuBar          = "ignoreMenuBar"
     case ignoreDock             = "ignoreDock"
     case halfRatio              = "halfRatio"
@@ -32,11 +31,21 @@ final class AppSettings {
 
     nonisolated(unsafe) static let shared = AppSettings()
 
+    /// 저장소. 앱은 `.standard`, 테스트는 별도 suite를 주입한다
+    @ObservationIgnored private let defaults: UserDefaults
+
+    /// 로드 중에는 didSet 저장·부작용(로그인 항목 등록)을 건너뛴다
+    @ObservationIgnored private var isLoading = false
+
     // MARK: - General Settings
 
-    /// 로그인 시 자동 실행
-    var launchAtLogin: Bool = true {
-        didSet { saveBool(launchAtLogin, for: .launchAtLogin); applyLaunchAtLogin() }
+    /// 로그인 시 자동 실행. 사용자가 켜기 전에는 등록하지 않는다
+    var launchAtLogin: Bool = false {
+        didSet {
+            guard !isLoading else { return }
+            saveBool(launchAtLogin, for: .launchAtLogin)
+            applyLaunchAtLogin()
+        }
     }
 
     /// 메뉴바 아이콘 표시 여부
@@ -58,11 +67,6 @@ final class AppSettings {
     /// 스냅 미리보기 오버레이 표시 여부
     var snapPreviewEnabled: Bool = true {
         didSet { saveBool(snapPreviewEnabled, for: .snapPreviewEnabled) }
-    }
-
-    /// Green Button 팝오버 메뉴 활성화 여부
-    var greenButtonMenuEnabled: Bool = true {
-        didSet { saveBool(greenButtonMenuEnabled, for: .greenButtonMenuEnabled) }
     }
 
     /// 전체화면 시 메뉴바 공간 제외 여부
@@ -134,7 +138,13 @@ final class AppSettings {
 
     // MARK: - Init
 
-    private init() {
+    private convenience init() {
+        self.init(defaults: .standard)
+    }
+
+    /// 테스트용 생성자. 지정한 UserDefaults에서만 읽고 쓴다
+    init(defaults: UserDefaults) {
+        self.defaults = defaults
         loadAllSettings()
     }
 
@@ -155,14 +165,14 @@ final class AppSettings {
     // MARK: - Load
 
     private func loadAllSettings() {
-        let defaults = UserDefaults.standard
-        launchAtLogin          = defaults.object(forKey: SettingsKey.launchAtLogin.rawValue) as? Bool ?? true
+        isLoading = true
+        defer { isLoading = false }
+        launchAtLogin          = defaults.object(forKey: SettingsKey.launchAtLogin.rawValue) as? Bool ?? false
         showMenuBarIcon        = defaults.object(forKey: SettingsKey.showMenuBarIcon.rawValue) as? Bool ?? true
         dragTriggerEnabled     = defaults.object(forKey: SettingsKey.dragTriggerEnabled.rawValue) as? Bool ?? true
         let rawThreshold = defaults.object(forKey: SettingsKey.dragTriggerThreshold.rawValue) as? Int ?? 4
         dragTriggerThreshold   = max(2, min(20, rawThreshold))
         snapPreviewEnabled     = defaults.object(forKey: SettingsKey.snapPreviewEnabled.rawValue) as? Bool ?? true
-        greenButtonMenuEnabled = defaults.object(forKey: SettingsKey.greenButtonMenuEnabled.rawValue) as? Bool ?? true
         ignoreMenuBar          = defaults.object(forKey: SettingsKey.ignoreMenuBar.rawValue) as? Bool ?? true
         ignoreDock             = defaults.object(forKey: SettingsKey.ignoreDock.rawValue) as? Bool ?? true
         let rawHalfRatio = defaults.object(forKey: SettingsKey.halfRatio.rawValue) as? Double ?? 0.5
@@ -177,16 +187,21 @@ final class AppSettings {
     }
 
     private func loadCustomLayouts() {
-        guard let data = UserDefaults.standard.data(forKey: SettingsKey.customLayouts.rawValue),
+        guard let data = defaults.data(forKey: SettingsKey.customLayouts.rawValue),
               let layouts = try? JSONDecoder().decode([LayoutPreset].self, from: data) else {
             customLayouts = []
             return
         }
-        customLayouts = layouts
+        // 과거에 저장된 비정상 프레임(크기 0, 화면 밖)도 정리한다
+        customLayouts = layouts.map { layout in
+            var sanitized = layout
+            sanitized.frame = layout.frame.sanitized()
+            return sanitized
+        }
     }
 
     private func loadShortcutBindings() {
-        guard let data = UserDefaults.standard.data(forKey: SettingsKey.shortcutBindings.rawValue),
+        guard let data = defaults.data(forKey: SettingsKey.shortcutBindings.rawValue),
               let bindings = try? JSONDecoder().decode([String: ShortcutBinding].self, from: data) else {
             shortcutBindings = [:]
             return
@@ -197,29 +212,29 @@ final class AppSettings {
     // MARK: - Save Helpers
 
     private func saveBool(_ value: Bool, for key: SettingsKey) {
-        UserDefaults.standard.set(value, forKey: key.rawValue)
+        defaults.set(value, forKey: key.rawValue)
     }
 
     private func saveInt(_ value: Int, for key: SettingsKey) {
-        UserDefaults.standard.set(value, forKey: key.rawValue)
+        defaults.set(value, forKey: key.rawValue)
     }
 
     private func saveDouble(_ value: Double, for key: SettingsKey) {
-        UserDefaults.standard.set(value, forKey: key.rawValue)
+        defaults.set(value, forKey: key.rawValue)
     }
 
     private func saveString(_ value: String, for key: SettingsKey) {
-        UserDefaults.standard.set(value, forKey: key.rawValue)
+        defaults.set(value, forKey: key.rawValue)
     }
 
     private func saveCustomLayouts() {
         guard let data = try? JSONEncoder().encode(customLayouts) else { return }
-        UserDefaults.standard.set(data, forKey: SettingsKey.customLayouts.rawValue)
+        defaults.set(data, forKey: SettingsKey.customLayouts.rawValue)
     }
 
     private func saveShortcutBindings() {
         guard let data = try? JSONEncoder().encode(shortcutBindings) else { return }
-        UserDefaults.standard.set(data, forKey: SettingsKey.shortcutBindings.rawValue)
+        defaults.set(data, forKey: SettingsKey.shortcutBindings.rawValue)
     }
 
     // MARK: - Launch At Login

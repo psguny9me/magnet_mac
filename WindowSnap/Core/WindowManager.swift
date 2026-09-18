@@ -12,8 +12,14 @@ final class WindowManager {
 
     // MARK: - Private State
 
+    /// 복원용 원본 프레임 항목. CGWindowID는 창이 닫히면 재사용될 수 있어 pid를 함께 기록한다
+    private struct OriginalFrameEntry {
+        let pid: pid_t
+        let frame: CGRect
+    }
+
     /// 스냅 전 원본 프레임 저장소 (복원 기능용)
-    private var originalFrames: [CGWindowID: CGRect] = [:]
+    private var originalFrames: [CGWindowID: OriginalFrameEntry] = [:]
 
     private init() {}
 
@@ -29,7 +35,8 @@ final class WindowManager {
             kAXFocusedWindowAttribute as CFString,
             &focusedWindow
         )
-        guard result == .success, let window = focusedWindow else { return nil }
+        guard result == .success, let window = focusedWindow,
+              CFGetTypeID(window) == AXUIElementGetTypeID() else { return nil }
         return (window as! AXUIElement)
     }
 
@@ -92,23 +99,29 @@ final class WindowManager {
 
     /// 스냅 전 원본 프레임을 저장 (아직 저장되지 않은 경우에만)
     func storeOriginalFrameIfNeeded(for window: AXUIElement) {
+        pruneStaleOriginalFrames()
         guard let windowID = getWindowID(window),
-              originalFrames[windowID] == nil,
-              let frame = getWindowFrame(window) else { return }
-        originalFrames[windowID] = frame
+              let pid = getPID(window) else { return }
+        // 같은 CGWindowID라도 다른 프로세스면 재사용된 id이므로 덮어쓴다
+        if let existing = originalFrames[windowID], existing.pid == pid { return }
+        guard let frame = getWindowFrame(window) else { return }
+        originalFrames[windowID] = OriginalFrameEntry(pid: pid, frame: frame)
     }
 
     /// 저장된 원본 프레임으로 창을 복원
     func restoreOriginalFrame(for window: AXUIElement) {
         guard let windowID = getWindowID(window),
-              let originalFrame = originalFrames[windowID] else { return }
-        setWindowFrame(window, frame: originalFrame)
+              let pid = getPID(window),
+              let entry = originalFrames[windowID], entry.pid == pid else { return }
+        setWindowFrame(window, frame: entry.frame)
         originalFrames.removeValue(forKey: windowID)
     }
 
-    /// 저장된 원본 프레임을 명시적으로 지움 (복원 기록 초기화)
-    func clearOriginalFrame(for windowID: CGWindowID) {
-        originalFrames.removeValue(forKey: windowID)
+    /// 종료된 프로세스의 항목을 제거해 저장소가 무한히 커지지 않게 한다
+    private func pruneStaleOriginalFrames() {
+        originalFrames = originalFrames.filter { _, entry in
+            NSRunningApplication(processIdentifier: entry.pid) != nil
+        }
     }
 
     // MARK: - Private Helpers
@@ -116,35 +129,43 @@ final class WindowManager {
     private func getWindowPosition(_ window: AXUIElement) -> CGPoint? {
         var posValue: CFTypeRef?
         guard AXUIElementCopyAttributeValue(window, kAXPositionAttribute as CFString, &posValue) == .success,
-              let axValue = posValue else { return nil }
+              let axValue = posValue, CFGetTypeID(axValue) == AXValueGetTypeID() else { return nil }
         var point = CGPoint.zero
-        AXValueGetValue(axValue as! AXValue, .cgPoint, &point)
+        guard AXValueGetValue(axValue as! AXValue, .cgPoint, &point) else { return nil }
         return point
     }
 
     private func getWindowSize(_ window: AXUIElement) -> CGSize? {
         var sizeValue: CFTypeRef?
         guard AXUIElementCopyAttributeValue(window, kAXSizeAttribute as CFString, &sizeValue) == .success,
-              let axValue = sizeValue else { return nil }
+              let axValue = sizeValue, CFGetTypeID(axValue) == AXValueGetTypeID() else { return nil }
         var size = CGSize.zero
-        AXValueGetValue(axValue as! AXValue, .cgSize, &size)
+        guard AXValueGetValue(axValue as! AXValue, .cgSize, &size) else { return nil }
         return size
     }
 
-    /// CGWindowID를 AXUIElement에서 추출
+    private func getPID(_ window: AXUIElement) -> pid_t? {
+        var pid: pid_t = 0
+        guard AXUIElementGetPid(window, &pid) == .success else { return nil }
+        return pid
+    }
+
+    /// CGWindowID를 AXUIElement에서 추출. 비공개 API가 없는 OS에서는 nil (복원 기능만 비활성화)
     private func getWindowID(_ window: AXUIElement) -> CGWindowID? {
+        guard let getWindow = Self.axGetWindowFunction else { return nil }
         var windowID: CGWindowID = 0
-        let result = _AXUIElementGetWindow(window, &windowID)
-        guard result == .success else { return nil }
+        guard getWindow(window, &windowID) == .success else { return nil }
         return windowID
     }
+
+    // MARK: - Private API (dlsym)
+
+    private typealias AXGetWindowFunction = @convention(c) (AXUIElement, UnsafeMutablePointer<CGWindowID>) -> AXError
+
+    /// `_AXUIElementGetWindow`는 비공개 API라 링크 시점에 묶으면 심볼이 사라졌을 때 앱이 뜨지 않는다.
+    /// 실행 시점에 찾아서 없으면 nil로 두어 창 식별 기능만 꺼지게 한다
+    private static let axGetWindowFunction: AXGetWindowFunction? = {
+        guard let symbol = dlsym(UnsafeMutableRawPointer(bitPattern: -2), "_AXUIElementGetWindow") else { return nil }
+        return unsafeBitCast(symbol, to: AXGetWindowFunction.self)
+    }()
 }
-
-// MARK: - Private C Function Bridge
-
-/// AXUIElement에서 CGWindowID를 얻는 Private API 브릿지
-@_silgen_name("_AXUIElementGetWindow")
-private func _AXUIElementGetWindow(
-    _ element: AXUIElement,
-    _ identifier: UnsafeMutablePointer<CGWindowID>
-) -> AXError

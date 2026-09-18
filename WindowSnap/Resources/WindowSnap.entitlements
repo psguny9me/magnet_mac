@@ -5,8 +5,5 @@
     <!-- App Sandbox 비활성화: Accessibility API(AXUIElement) 전체 권한 사용을 위해 필요 -->
     <key>com.apple.security.app-sandbox</key>
     <false/>
-    <!-- Apple Events 자동화 권한 -->
-    <key>com.apple.security.automation.apple-events</key>
-    <true/>
 </dict>
 </plist>

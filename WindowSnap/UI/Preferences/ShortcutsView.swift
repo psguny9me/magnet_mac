@@ -155,7 +155,7 @@ private struct ShortcutRowView: View {
 // MARK: - ShortcutRecorderView
 
 /// 키보드 단축키를 녹화하는 커스텀 뷰 (NSViewRepresentable)
-private struct ShortcutRecorderView: NSViewRepresentable {
+struct ShortcutRecorderView: NSViewRepresentable {
 
     let onRecord: (ShortcutBinding) -> Void
     let onCancel: () -> Void

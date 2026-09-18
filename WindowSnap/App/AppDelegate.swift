@@ -95,18 +95,4 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         onboardingWindow = nil
         startCoreServices()
     }
-
-    // MARK: - Settings Window
-
-    @objc func showPreferencesWindow(_ sender: Any?) {
-        let preferencesView = PreferencesView()
-        let hostingController = NSHostingController(rootView: preferencesView)
-        let window = NSWindow(contentViewController: hostingController)
-        window.title = "환경설정"
-        window.styleMask = [.titled, .closable]
-        window.isReleasedWhenClosed = false
-        window.center()
-        window.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
-    }
 }

@@ -225,6 +225,10 @@ private struct AccessibilityStepView: View {
     }
 
     private func openAccessibilitySettings() {
+        // 프롬프트 옵션으로 호출해야 시스템 설정의 손쉬운 사용 목록에 앱이 자동으로 추가된다
+        // kAXTrustedCheckOptionPrompt 전역은 Swift 6 동시성 검사에 걸리므로 같은 값의 문자열 키를 직접 쓴다
+        let options = ["AXTrustedCheckOptionPrompt": true] as CFDictionary
+        AXIsProcessTrustedWithOptions(options)
         let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")
         if let url {
             NSWorkspace.shared.open(url)

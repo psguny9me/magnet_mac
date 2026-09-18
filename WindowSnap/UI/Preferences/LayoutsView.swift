@@ -49,7 +49,9 @@ struct LayoutsView: View {
         }
         .sheet(isPresented: $isAddingLayout) {
             LayoutEditSheet(mode: .add) { newLayout in
-                settings.customLayouts.append(newLayout)
+                var sanitized = newLayout
+                sanitized.frame = newLayout.frame.sanitized()
+                settings.customLayouts.append(sanitized)
                 reloadShortcuts()
             }
         }
@@ -99,10 +101,22 @@ private struct LayoutDetailEditor: View {
     @Binding var layout: LayoutPreset
     let onSave: () -> Void
 
+    @State private var isRecordingShortcut = false
+    @State private var shortcutError: String? = nil
+
     var body: some View {
         Form {
             Section("레이아웃 정보") {
                 TextField("이름", text: $layout.name)
+
+                LabeledContent("단축키") {
+                    shortcutEditor
+                }
+                if let shortcutError {
+                    Text(shortcutError)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
 
                 LabeledContent("X 위치") {
                     ratioSlider(value: $layout.frame.x, label: "X")
@@ -124,7 +138,59 @@ private struct LayoutDetailEditor: View {
             }
         }
         .formStyle(.grouped)
-        .onChange(of: layout) { _, _ in onSave() }
+        .onChange(of: layout) { _, newValue in
+            // 슬라이더가 만든 비정상 프레임(크기 0, 화면 밖)은 즉시 정리한다
+            let sanitized = newValue.frame.sanitized()
+            if sanitized != newValue.frame {
+                layout.frame = sanitized
+                return
+            }
+            onSave()
+        }
+    }
+
+    /// 커스텀 레이아웃 단축키 편집 (내장 레이아웃과 같은 녹화기·충돌 검사 사용)
+    private var shortcutEditor: some View {
+        HStack {
+            if isRecordingShortcut {
+                ShortcutRecorderView(
+                    onRecord: { newShortcut in
+                        do {
+                            try KeyboardShortcutManager.shared.validateShortcut(
+                                newShortcut,
+                                excludingKey: layout.bindingKey
+                            )
+                            layout.shortcut = newShortcut
+                            shortcutError = nil
+                        } catch {
+                            shortcutError = error.localizedDescription
+                        }
+                        isRecordingShortcut = false
+                    },
+                    onCancel: { isRecordingShortcut = false }
+                )
+                .frame(width: 150, height: 22)
+            } else {
+                Text(layout.shortcut?.displayString ?? "없음")
+                    .font(.system(.body, design: .monospaced))
+                    .foregroundStyle(layout.shortcut == nil ? .tertiary : .primary)
+                    .frame(width: 150)
+                    .padding(.vertical, 2)
+                    .background(Color(.controlBackgroundColor))
+                    .clipShape(RoundedRectangle(cornerRadius: 4))
+                    .onTapGesture { isRecordingShortcut = true }
+            }
+
+            Button {
+                layout.shortcut = nil
+                shortcutError = nil
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .foregroundStyle(.secondary)
+            }
+            .buttonStyle(.plain)
+            .opacity(layout.shortcut != nil ? 1 : 0)
+        }
     }
 
     private func ratioSlider(value: Binding<Double>, label: String) -> some View {

@@ -65,18 +65,36 @@ final class SnapCalculator {
         return layout.frame.toAbsoluteFrame(in: screenFrame)
     }
 
-    /// 화면 프레임 해석: 메뉴바/Dock 제외 여부에 따라 visibleFrame 또는 frame 사용
+    /// 화면 프레임 해석: 메뉴바 제외와 Dock 제외를 각각 독립적으로 적용한다
+    /// (visibleFrame은 둘을 한꺼번에 뺀 값이라 frame과의 차이를 위쪽 = 메뉴바, 아래·좌·우 = Dock으로 나눈다)
     func resolveScreenFrame(screen: NSScreen, settings: AppSettings) -> CGRect {
+        let frame = usableFrame(
+            frame: screen.frame,
+            visibleFrame: screen.visibleFrame,
+            ignoreMenuBar: settings.ignoreMenuBar,
+            ignoreDock: settings.ignoreDock
+        )
         // macOS에서 AXUIElement는 좌상단 원점 좌표계를 사용하므로 변환 필요
-        let frame = (settings.ignoreMenuBar || settings.ignoreDock)
-            ? screen.visibleFrame
-            : screen.frame
         return convertToTopLeftOrigin(frame: frame, screen: screen)
     }
 
-    /// 세로형 모니터 여부 판단
-    func isPortraitMonitor(_ screen: NSScreen) -> Bool {
-        screen.frame.height > screen.frame.width
+    /// 좌하단 원점 좌표계에서 메뉴바/Dock 영역을 선택적으로 제외한 프레임 (순수 계산, 테스트 가능)
+    func usableFrame(frame: CGRect, visibleFrame: CGRect, ignoreMenuBar: Bool, ignoreDock: Bool) -> CGRect {
+        var result = frame
+        if ignoreMenuBar {
+            let topInset = max(0, frame.maxY - visibleFrame.maxY)
+            result.size.height -= topInset
+        }
+        if ignoreDock {
+            let bottomInset = max(0, visibleFrame.minY - frame.minY)
+            let leftInset = max(0, visibleFrame.minX - frame.minX)
+            let rightInset = max(0, frame.maxX - visibleFrame.maxX)
+            result.origin.y += bottomInset
+            result.size.height -= bottomInset
+            result.origin.x += leftInset
+            result.size.width -= leftInset + rightInset
+        }
+        return result
     }
 
     // MARK: - Drag Trigger Detection
@@ -117,19 +135,6 @@ final class SnapCalculator {
         return nil
     }
 
-    /// 마우스 위치에 해당하는 화면 내 트리거 영역의 미리보기 CGRect 반환
-    func calculatePreviewFrame(
-        for zone: SnapTriggerZone,
-        on screen: NSScreen,
-        settings: AppSettings
-    ) -> CGRect {
-        let layout = zone.builtInLayout.makeLayoutPreset(
-            halfRatio: settings.halfRatio,
-            thirdRatio: settings.thirdRatio
-        )
-        return calculateAbsoluteFrame(for: layout, on: screen, settings: settings)
-    }
-
     // MARK: - Center Frame Calculation
 
     /// 현재 창 크기를 유지하면서 화면 중앙에 배치할 프레임 반환
@@ -138,42 +143,6 @@ final class SnapCalculator {
         let centeredX = screenFrame.midX - windowSize.width / 2
         let centeredY = screenFrame.midY - windowSize.height / 2
         return CGRect(origin: CGPoint(x: centeredX, y: centeredY), size: windowSize)
-    }
-
-    // MARK: - Portrait Monitor Layout Rotation
-
-    /// 세로형 모니터에서 레이아웃 프레임을 90도 회전 적용
-    /// 가로 레이아웃(좌/우 절반, 1/3 등) -> 세로 레이아웃(상/하 절반, 1/3 등)으로 변환
-    func rotateFrameForPortrait(_ frame: RelativeFrame) -> RelativeFrame {
-        // x,y와 width,height를 교환하여 회전 효과
-        return RelativeFrame(
-            x: frame.y,
-            y: frame.x,
-            width: frame.height,
-            height: frame.width
-        )
-    }
-
-    /// 세로형 모니터에서 최적화된 레이아웃 프레임 반환
-    func calculateAbsoluteFrameAdaptive(
-        for layout: LayoutPreset,
-        on screen: NSScreen,
-        settings: AppSettings
-    ) -> CGRect {
-        // 세로형 모니터 감지: ScreenManager 없이 직접 판단
-        let isPortrait = screen.frame.height > screen.frame.width
-        var adaptedLayout = layout
-        if isPortrait {
-            // 세로형 모니터에서 가로 레이아웃을 세로 방향으로 자동 전환
-            adaptedLayout = LayoutPreset(
-                id: layout.id,
-                name: layout.name,
-                frame: rotateFrameForPortrait(layout.frame),
-                shortcut: layout.shortcut,
-                isBuiltIn: layout.isBuiltIn
-            )
-        }
-        return calculateAbsoluteFrame(for: adaptedLayout, on: screen, settings: settings)
     }
 
     // MARK: - Coordinate System Conversion
@@ -196,15 +165,5 @@ final class SnapCalculator {
         guard let menuBarMaxY = menuBarScreenMaxYBottomLeftGlobal() else { return axFrame }
         let bottomLeftOriginY = menuBarMaxY - axFrame.maxY
         return CGRect(x: axFrame.origin.x, y: bottomLeftOriginY, width: axFrame.width, height: axFrame.height)
-    }
-
-    // MARK: - Multi-Monitor Scale Factor Handling
-
-    /// 화면 간 좌표 변환 시 스케일 팩터 차이를 보정
-    /// (예: Retina XDR -> HP FHD로 드래그 시 포인트 단위 유지)
-    func normalizePoint(_ point: CGPoint, fromScreen: NSScreen, toScreen: NSScreen) -> CGPoint {
-        // NSScreen 좌표계는 이미 포인트 단위이므로 별도 변환 불필요
-        // 다만 스케일 팩터가 다른 화면 간 이동 시 논리 픽셀 기준으로 처리됨
-        return point
     }
 }

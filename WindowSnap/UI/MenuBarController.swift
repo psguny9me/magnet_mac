@@ -111,7 +111,7 @@ final class MenuBarController {
 
         // 이 Mac 정보
         let aboutItem = NSMenuItem(
-            title: "이 Mac 정보...",
+            title: "WindowSnap 정보...",
             action: #selector(openAbout),
             keyEquivalent: ""
         )
@@ -242,27 +242,20 @@ final class MenuBarController {
 
     @objc private func applyBuiltInLayout(_ sender: NSMenuItem) {
         guard let rawValue = sender.representedObject as? String,
-              let builtIn = BuiltInLayout(rawValue: rawValue),
-              let window = WindowManager.shared.getFocusedWindow(),
-              let screen = getActiveScreen(for: window) else { return }
-
+              let builtIn = BuiltInLayout(rawValue: rawValue) else { return }
         let settings = AppSettings.shared
         let preset = builtIn.makeLayoutPreset(
             halfRatio: settings.halfRatio,
             thirdRatio: settings.thirdRatio
         )
-
-        handleSpecialLayouts(builtIn: builtIn, window: window, screen: screen, preset: preset, settings: settings)
+        LayoutExecutor.apply(preset)
     }
 
     @objc private func applyCustomLayout(_ sender: NSMenuItem) {
         guard let idString = sender.representedObject as? String,
               let uuid = UUID(uuidString: idString),
-              let layout = AppSettings.shared.customLayouts.first(where: { $0.id == uuid }),
-              let window = WindowManager.shared.getFocusedWindow(),
-              let screen = getActiveScreen(for: window) else { return }
-
-        WindowManager.shared.snapWindow(window, to: layout, on: screen)
+              let layout = AppSettings.shared.customLayouts.first(where: { $0.id == uuid }) else { return }
+        LayoutExecutor.apply(layout)
     }
 
     @objc private func saveClipboardImage() {
@@ -274,52 +267,13 @@ final class MenuBarController {
     }
 
     @objc private func openPreferences() {
-        NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+        // SwiftUI `Settings` 씬의 창을 연다 (macOS 14+). 별도 NSWindow를 만들지 않아 환경설정 창이 하나만 존재한다
+        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
         NSApp.activate(ignoringOtherApps: true)
     }
 
     @objc private func openAbout() {
         NSApp.orderFrontStandardAboutPanel(nil)
         NSApp.activate(ignoringOtherApps: true)
-    }
-
-    // MARK: - Layout Execution Helpers
-
-    private func handleSpecialLayouts(
-        builtIn: BuiltInLayout,
-        window: AXUIElement,
-        screen: NSScreen,
-        preset: LayoutPreset,
-        settings: AppSettings
-    ) {
-        switch builtIn {
-        case .restore:
-            WindowManager.shared.restoreOriginalFrame(for: window)
-        case .center:
-            if let currentFrame = WindowManager.shared.getWindowFrame(window) {
-                WindowManager.shared.storeOriginalFrameIfNeeded(for: window)
-                let centeredFrame = SnapCalculator.shared.calculateCenterFrame(
-                    windowSize: currentFrame.size,
-                    on: screen,
-                    settings: settings
-                )
-                WindowManager.shared.setWindowFrame(window, frame: centeredFrame)
-            }
-        case .moveToMonitor1:
-            WindowManager.shared.moveFocusedWindowToMonitor(oneBasedIndex: 1)
-        case .moveToMonitor2:
-            WindowManager.shared.moveFocusedWindowToMonitor(oneBasedIndex: 2)
-        case .moveToMonitor3:
-            WindowManager.shared.moveFocusedWindowToMonitor(oneBasedIndex: 3)
-        default:
-            WindowManager.shared.snapWindow(window, to: preset, on: screen)
-        }
-    }
-
-    /// Step 2: `screenForSnap` → mouse `screenContaining` → `NSScreen.main` (same order as `KeyboardShortcutManager`)
-    private func getActiveScreen(for window: AXUIElement) -> NSScreen? {
-        ScreenManager.shared.screenForSnap(with: window)
-            ?? ScreenManager.shared.screenContaining(mouseLocation: NSEvent.mouseLocation)
-            ?? NSScreen.main
     }
 }

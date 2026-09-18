@@ -27,6 +27,7 @@
 		95DE26076087DD390D68BD9C /* LayoutPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC63315ECDA26BC338407D1F /* LayoutPreset.swift */; };
 		95E9E5EF0C9000B51EC26F1C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EE2E1679B51FAA70CEC6BF73 /* Assets.xcassets */; };
 		B7B219B79F119CD4F399CC43 /* ClipboardImageSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFB596B42156B03F08E9BED /* ClipboardImageSaver.swift */; };
+		B83BDA1141314620A28AAE20 /* LayoutExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57AB6776E492C826748FF850 /* LayoutExecutor.swift */; };
 		BB82795F28454BF1F8D5D14B /* AppSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4826365C0703FCA14AD6AA /* AppSettingsTests.swift */; };
 		BDA82F39996AC73499CCAFB5 /* ClipboardFileNaming.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75418FD423E1D08C4E76E9CC /* ClipboardFileNaming.swift */; };
 		C826DC35FD0F960CA503AEDB /* AppShortcutAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217EA8FA22A052D6CFEA6765 /* AppShortcutAction.swift */; };
@@ -49,6 +50,7 @@
 		2EFB596B42156B03F08E9BED /* ClipboardImageSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardImageSaver.swift; sourceTree = "<group>"; };
 		40E19830296B23F4AFB08855 /* SnapCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapCalculator.swift; sourceTree = "<group>"; };
 		43DDFDE9A9339E728B7DC4CF /* AdvancedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedView.swift; sourceTree = "<group>"; };
+		57AB6776E492C826748FF850 /* LayoutExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutExecutor.swift; sourceTree = "<group>"; };
 		61FFBF605FBE458F8FB52C8C /* ShortcutsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutsView.swift; sourceTree = "<group>"; };
 		620D2A0473C08BC524DE8F92 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		75418FD423E1D08C4E76E9CC /* ClipboardFileNaming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardFileNaming.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				2EFB596B42156B03F08E9BED /* ClipboardImageSaver.swift */,
+				57AB6776E492C826748FF850 /* LayoutExecutor.swift */,
 				DDAF86C6B23CFC695EB2294F /* ScreenManager.swift */,
 				40E19830296B23F4AFB08855 /* SnapCalculator.swift */,
 				FE460C029D5ACB4DA0EF292D /* WindowManager.swift */,
@@ -304,6 +307,7 @@
 				34710EDE3FB39D20B6F7D8B0 /* DragMonitor.swift in Sources */,
 				28837CA6B2A6F4CFD4BD54AF /* GeneralView.swift in Sources */,
 				8DC97CD06B84842FCE230E9C /* KeyboardShortcutManager.swift in Sources */,
+				B83BDA1141314620A28AAE20 /* LayoutExecutor.swift in Sources */,
 				95DE26076087DD390D68BD9C /* LayoutPreset.swift in Sources */,
 				17ED6AC9F3EAE1A026050CEA /* LayoutsView.swift in Sources */,
 				D55020204696EE6D2DCF5978 /* MenuBarController.swift in Sources */,

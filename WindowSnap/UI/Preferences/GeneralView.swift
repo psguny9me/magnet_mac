@@ -65,7 +65,6 @@ struct GeneralView: View {
             }
 
             Section("기타") {
-                Toggle("Green Button 팝오버 메뉴", isOn: $settings.greenButtonMenuEnabled)
                 Toggle("전체화면 시 메뉴바 공간 제외", isOn: $settings.ignoreMenuBar)
                 Toggle("레이아웃 계산 시 Dock 공간 제외", isOn: $settings.ignoreDock)
             }

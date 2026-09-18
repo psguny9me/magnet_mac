@@ -26,6 +26,9 @@ final class SnapPreviewWindow {
     private var overlayWindow: NSWindow?
     private var isVisible: Bool = false
 
+    /// show/hide 세대 번호. 페이드아웃 완료 핸들러가 그 사이 다시 표시된 창을 내리지 않도록 한다
+    private var generation: Int = 0
+
     private init() {}
 
     // MARK: - Public API
@@ -37,10 +40,12 @@ final class SnapPreviewWindow {
         }
         guard let window = overlayWindow else { return }
 
+        generation += 1
         window.setFrame(frame, display: false)
-        window.alphaValue = 0
 
         if !isVisible {
+            // 처음 나타날 때만 0에서 페이드인. 이미 보이는 창은 위치만 바꿔 깜빡임을 막는다
+            window.alphaValue = 0
             window.orderFront(nil)
             isVisible = true
         }
@@ -55,14 +60,21 @@ final class SnapPreviewWindow {
     /// 미리보기 오버레이를 숨김 (fade-out 애니메이션)
     func hide() {
         guard isVisible, let window = overlayWindow else { return }
+        generation += 1
+        let hideGeneration = generation
 
         NSAnimationContext.runAnimationGroup({ context in
             context.duration = Constant.fadeOutDuration
             context.timingFunction = CAMediaTimingFunction(name: .easeOut)
             window.animator().alphaValue = 0
         }, completionHandler: {
-            window.orderOut(nil)
-            self.isVisible = false
+            // 완료 핸들러는 메인 스레드에서 불리지만 @Sendable이라 격리를 명시한다
+            MainActor.assumeIsolated {
+                // 페이드아웃 중에 show()가 다시 불렸으면 창을 내리지 않는다
+                guard self.generation == hideGeneration else { return }
+                window.orderOut(nil)
+                self.isVisible = false
+            }
         })
     }
 

@@ -70,11 +70,22 @@ final class SnapCalculatorTests: XCTestCase {
 
     // MARK: - 세로형 모니터 회전 테스트
 
-    func testPortraitRotationSwapsWidthAndHeight() {
-        let originalFrame = RelativeFrame(x: 0, y: 0, width: 0.5, height: 1.0)
-        let rotatedFrame = calculator.rotateFrameForPortrait(originalFrame)
-        XCTAssertEqual(rotatedFrame.width, originalFrame.height)
-        XCTAssertEqual(rotatedFrame.height, originalFrame.width)
+    /// 메뉴바 제외와 Dock 제외가 서로 독립적으로 적용되어야 한다 (frame 1000x800, 메뉴바 25pt, 하단 Dock 70pt)
+    func testUsableFrameAppliesMenuBarAndDockInsetsIndependently() {
+        let frame = CGRect(x: 0, y: 0, width: 1000, height: 800)
+        let visible = CGRect(x: 0, y: 70, width: 1000, height: 705)
+
+        let menuBarOnly = calculator.usableFrame(frame: frame, visibleFrame: visible, ignoreMenuBar: true, ignoreDock: false)
+        XCTAssertEqual(menuBarOnly, CGRect(x: 0, y: 0, width: 1000, height: 775))
+
+        let dockOnly = calculator.usableFrame(frame: frame, visibleFrame: visible, ignoreMenuBar: false, ignoreDock: true)
+        XCTAssertEqual(dockOnly, CGRect(x: 0, y: 70, width: 1000, height: 730))
+
+        let both = calculator.usableFrame(frame: frame, visibleFrame: visible, ignoreMenuBar: true, ignoreDock: true)
+        XCTAssertEqual(both, visible)
+
+        let neither = calculator.usableFrame(frame: frame, visibleFrame: visible, ignoreMenuBar: false, ignoreDock: false)
+        XCTAssertEqual(neither, frame)
     }
 
     /// Menu-bar Y reference: BL global screen.frame -> AX -> BL global round-trips for `NSScreen.main`

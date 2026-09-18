@@ -179,11 +179,14 @@ final class KeyboardShortcutManager: @unchecked Sendable {
 
         // 스레드가 런루프를 확보할 때까지 잠깐 기다려 tapRunLoop를 확정한다 (stop 시 레이스 방지)
         let ready = DispatchSemaphore(value: 0)
+        // CF 타입은 Sendable이 아니지만 이 스레드가 시작되기 전까지 다른 곳에서 건드리지 않는다
+        nonisolated(unsafe) let tapRef = tap
+        nonisolated(unsafe) let sourceRef = source
         let thread = Thread { [self] in
             let runLoop = CFRunLoopGetCurrent()
             self.tapRunLoop = runLoop
-            CFRunLoopAddSource(runLoop, source, .commonModes)
-            CGEvent.tapEnable(tap: tap, enable: true)
+            CFRunLoopAddSource(runLoop, sourceRef, .commonModes)
+            CGEvent.tapEnable(tap: tapRef, enable: true)
             ready.signal()
             CFRunLoopRun()
         }
@@ -270,46 +273,6 @@ final class KeyboardShortcutManager: @unchecked Sendable {
     }
 
     private func executeSnapAction(for layout: LayoutPreset) {
-        guard let window = WindowManager.shared.getFocusedWindow() else { return }
-        // Step 2: same policy as `MenuBarController.getActiveScreen` — window screen, then mouse, then main
-        let screen = ScreenManager.shared.screenForSnap(with: window)
-            ?? ScreenManager.shared.screenContaining(mouseLocation: NSEvent.mouseLocation)
-            ?? NSScreen.main
-        guard let screen else { return }
-
-        // restore 레이아웃 특수 처리
-        if layout.frame.width == 0 && layout.frame.height == 0 && layout.name == BuiltInLayout.restore.localizedName {
-            WindowManager.shared.restoreOriginalFrame(for: window)
-            return
-        }
-
-        if layout.name == BuiltInLayout.moveToMonitor1.localizedName {
-            WindowManager.shared.moveFocusedWindowToMonitor(oneBasedIndex: 1)
-            return
-        }
-        if layout.name == BuiltInLayout.moveToMonitor2.localizedName {
-            WindowManager.shared.moveFocusedWindowToMonitor(oneBasedIndex: 2)
-            return
-        }
-        if layout.name == BuiltInLayout.moveToMonitor3.localizedName {
-            WindowManager.shared.moveFocusedWindowToMonitor(oneBasedIndex: 3)
-            return
-        }
-
-        // center 레이아웃 특수 처리 (현재 크기 유지, 중앙 배치)
-        if layout.frame.width == 0 && layout.frame.height == 0 {
-            if let currentFrame = WindowManager.shared.getWindowFrame(window) {
-                WindowManager.shared.storeOriginalFrameIfNeeded(for: window)
-                let centeredFrame = SnapCalculator.shared.calculateCenterFrame(
-                    windowSize: currentFrame.size,
-                    on: screen,
-                    settings: AppSettings.shared
-                )
-                WindowManager.shared.setWindowFrame(window, frame: centeredFrame)
-            }
-            return
-        }
-
-        WindowManager.shared.snapWindow(window, to: layout, on: screen)
+        LayoutExecutor.apply(layout)
     }
 }

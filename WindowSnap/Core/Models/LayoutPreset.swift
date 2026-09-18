@@ -13,6 +13,18 @@ struct RelativeFrame: Codable, Equatable {
 
     static let zero = RelativeFrame(x: 0, y: 0, width: 0, height: 0)
 
+    /// 커스텀 레이아웃이 허용하는 최소 비율 (이보다 작은 창은 사실상 보이지 않음)
+    static let minimumCustomSize: Double = 0.1
+
+    /// 커스텀 레이아웃용 정리: 너비·높이는 최소 비율 이상, 위치는 창이 화면 안에 들어오도록 조정한다
+    func sanitized() -> RelativeFrame {
+        let w = min(max(width, Self.minimumCustomSize), 1)
+        let h = min(max(height, Self.minimumCustomSize), 1)
+        let cx = min(max(x, 0), 1 - w)
+        let cy = min(max(y, 0), 1 - h)
+        return RelativeFrame(x: cx, y: cy, width: w, height: h)
+    }
+
     /// 절대 좌표로 변환. screenFrame과 같은 좌표계(AX 좌상단 원점)로 결과를 돌려준다
     func toAbsoluteFrame(in screenFrame: CGRect) -> CGRect {
         let absoluteX = screenFrame.origin.x + x * screenFrame.width

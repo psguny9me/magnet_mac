@@ -28,11 +28,6 @@ final class ScreenManager: @unchecked Sendable {
 
     // MARK: - Public API
 
-    /// Step 1: more than one connected display
-    var isMultiMonitor: Bool {
-        screens.count > 1
-    }
-
     /// 마우스 커서 위치가 속하는 모니터를 반환 (`NSScreen.screens` 직접 사용 — 캐시와 불일치 방지)
     func screenContaining(mouseLocation: CGPoint) -> NSScreen? {
         NSScreen.screens.first { screen in
@@ -68,31 +63,6 @@ final class ScreenManager: @unchecked Sendable {
             }
         }
         return bestScreen ?? NSScreen.main
-    }
-
-    /// 인접 모니터(지정 방향으로 바로 옆 모니터)를 반환
-    func adjacentScreen(to screen: NSScreen, direction: SnapTriggerZone) -> NSScreen? {
-        switch direction {
-        case .leftEdge:
-            return screens.filter { $0.frame.maxX <= screen.frame.minX + 1 }
-                .max(by: { $0.frame.minX < $1.frame.minX })
-        case .rightEdge:
-            return screens.filter { $0.frame.minX >= screen.frame.maxX - 1 }
-                .min(by: { $0.frame.minX < $1.frame.minX })
-        default:
-            return nil
-        }
-    }
-
-    /// 세로형 모니터인지 판단
-    func isPortrait(_ screen: NSScreen) -> Bool {
-        screen.frame.height > screen.frame.width
-    }
-
-    /// 메인 화면(가장 큰 해상도 기준) 반환
-    var mainScreen: NSScreen {
-        screens.max(by: { $0.frame.width * $0.frame.height < $1.frame.width * $1.frame.height })
-            ?? (NSScreen.main ?? NSScreen.screens[0])
     }
 
     // MARK: - Screen Change Observer

@@ -281,6 +281,6 @@ final class DragMonitor: @unchecked Sendable {
             halfRatio: settings.halfRatio,
             thirdRatio: settings.thirdRatio
         )
-        WindowManager.shared.snapWindow(window, to: layout, on: screen)
+        LayoutExecutor.apply(layout, to: window, on: screen)
     }
 }
