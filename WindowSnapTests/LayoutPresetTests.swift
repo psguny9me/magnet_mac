@@ -95,3 +95,30 @@ final class LayoutPresetTests: XCTestCase {
         XCTAssertEqual(KeyCodeHelper.displayString(for: 51), "⌫")
     }
 }
+
+// MARK: - bindingKey 안정성
+
+extension LayoutPresetTests {
+
+    /// 기본 프리셋은 호출마다 id가 새로 생성되지만 bindingKey는 종류 rawValue로 고정되어야 한다
+    func testBuiltInPresetBindingKeyIsStableAcrossCalls() {
+        let first = BuiltInLayout.halfLeft.makeLayoutPreset()
+        let second = BuiltInLayout.halfLeft.makeLayoutPreset()
+        XCTAssertNotEqual(first.id, second.id)
+        XCTAssertEqual(first.bindingKey, second.bindingKey)
+        XCTAssertEqual(first.bindingKey, BuiltInLayout.halfLeft.rawValue)
+    }
+
+    /// 커스텀 레이아웃은 id를 키로 쓰고, 과거 JSON(builtInKind 없음)도 디코딩된다
+    func testCustomPresetBindingKeyUsesIdAndLegacyJSONDecodes() throws {
+        let custom = LayoutPreset(name: "커스텀", frame: RelativeFrame(x: 0, y: 0, width: 0.5, height: 1))
+        XCTAssertEqual(custom.bindingKey, custom.id.uuidString)
+
+        let legacyJSON = """
+        [{"id":"\(custom.id.uuidString)","name":"커스텀","frame":{"x":0,"y":0,"width":0.5,"height":1},"isBuiltIn":false}]
+        """
+        let decoded = try JSONDecoder().decode([LayoutPreset].self, from: Data(legacyJSON.utf8))
+        XCTAssertNil(decoded.first?.builtInKind)
+        XCTAssertEqual(decoded.first?.bindingKey, custom.id.uuidString)
+    }
+}

@@ -8,6 +8,9 @@ import SwiftUI
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
 
+    /// 온보딩 창 (완료 시 직접 닫기 위해 보관)
+    private var onboardingWindow: NSWindow?
+
     // MARK: - Application Lifecycle
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -46,6 +49,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    /// 단축키·액션 매핑을 등록하고, 접근성 권한이 있으면 이벤트 탭을 시작한다.
+    /// 최초 실행, 온보딩 완료, 접근성 허용 후 복귀 세 경로가 모두 이 함수를 쓴다 (경로별 구현 드리프트 방지)
     private func startCoreServices() {
         let settings = AppSettings.shared
 
@@ -54,7 +59,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         KeyboardShortcutManager.shared.registerShortcuts(from: presets)
         KeyboardShortcutManager.shared.registerActionShortcuts(settings.makeActionShortcutMap())
 
-        // Accessibility 권한 있을 때만 이벤트 탭 시작
+        // Accessibility 권한 있을 때만 이벤트 탭 시작 (이미 켜져 있으면 내부에서 무시)
         if AXIsProcessTrusted() {
             KeyboardShortcutManager.shared.startListening()
             if settings.dragTriggerEnabled {
@@ -66,18 +71,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// 접근성 허용 후 복귀 시 단축키·드래그 모니터를 다시 붙임 (최초 거부 후 허용 대응)
     private func synchronizeAccessibilityDependentServices() {
         guard AXIsProcessTrusted() else { return }
-        let settings = AppSettings.shared
-        let presets = settings.makeBuiltInPresets() + settings.customLayouts
-        KeyboardShortcutManager.shared.registerShortcuts(from: presets)
-        KeyboardShortcutManager.shared.registerActionShortcuts(settings.makeActionShortcutMap())
-        KeyboardShortcutManager.shared.startListening()
-        if settings.dragTriggerEnabled {
-            DragMonitor.shared.startMonitoring()
-        }
+        startCoreServices()
     }
 
     private func showOnboarding() {
-        let onboardingView = OnboardingView()
+        let onboardingView = OnboardingView { [weak self] in
+            self?.finishOnboarding()
+        }
         let hostingController = NSHostingController(rootView: onboardingView)
         let window = NSWindow(contentViewController: hostingController)
         window.title = "WindowSnap 시작하기"
@@ -85,7 +85,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         window.isReleasedWhenClosed = false
         window.center()
         window.makeKeyAndOrderFront(nil)
+        onboardingWindow = window
         NSApp.activate(ignoringOtherApps: true)
+    }
+
+    /// 온보딩 완료: 창을 직접 닫고 (수동 생성 NSWindow는 SwiftUI dismiss로 닫히지 않음) 핵심 서비스 시작
+    private func finishOnboarding() {
+        onboardingWindow?.close()
+        onboardingWindow = nil
+        startCoreServices()
     }
 
     // MARK: - Settings Window

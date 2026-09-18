@@ -14,9 +14,11 @@ enum OnboardingStep: Int, CaseIterable {
 /// 앱 최초 실행 시 표시되는 3단계 온보딩 뷰
 struct OnboardingView: View {
 
+    /// "시작하기"를 눌렀을 때 호출. 창 닫기와 서비스 시작은 AppDelegate가 담당한다
+    let onComplete: () -> Void
+
     @State private var currentStep: OnboardingStep = .welcome
     @State private var isAccessibilityGranted: Bool = AXIsProcessTrusted()
-    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         VStack(spacing: 0) {
@@ -125,19 +127,7 @@ struct OnboardingView: View {
 
     private func completeOnboarding() {
         AppSettings.shared.hasCompletedOnboarding = true
-        dismiss()
-        // 온보딩 완료 후 핵심 기능 시작
-        startCoreServices()
-    }
-
-    private func startCoreServices() {
-        let settings = AppSettings.shared
-        let presets = settings.makeBuiltInPresets() + settings.customLayouts
-        KeyboardShortcutManager.shared.registerShortcuts(from: presets)
-        KeyboardShortcutManager.shared.startListening()
-        if settings.dragTriggerEnabled {
-            DragMonitor.shared.startMonitoring()
-        }
+        onComplete()
     }
 }
 

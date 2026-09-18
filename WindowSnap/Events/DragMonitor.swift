@@ -24,6 +24,22 @@ final class DragMonitor: @unchecked Sendable {
     /// 미리보기를 표시 중인 화면
     private var previewScreen: NSScreen?
 
+    /// 드래그 중인 창과 드래그 시작 시점 프레임 (창 이동인지 판별용)
+    private var dragWindow: AXUIElement?
+    private var dragStartFrame: CGRect?
+
+    /// 창 이동으로 확인됐는지 여부. 확인 전에는 스냅 트리거를 적용하지 않는다
+    private var isWindowDrag: Bool = false
+
+    /// 창 프레임을 마지막으로 확인한 시각 (AX 호출은 IPC라 매 이벤트마다 하지 않음)
+    private var lastFrameCheck: TimeInterval = 0
+
+    /// 창 프레임 재확인 간격 (초)
+    private static let frameCheckInterval: TimeInterval = 0.05
+
+    /// 이 거리(pt) 이상 원점이 움직여야 창 이동으로 인정
+    private static let moveThreshold: CGFloat = 3
+
     private init() {
         observeScreenChanges()
     }
@@ -131,10 +147,18 @@ final class DragMonitor: @unchecked Sendable {
         isDragging = true
         currentTriggerZone = nil
         previewScreen = nil
+        dragWindow = nil
+        dragStartFrame = nil
+        isWindowDrag = false
+        lastFrameCheck = 0
     }
 
     private func handleMouseDragged(event: CGEvent, settings: AppSettings) {
         guard isDragging else { return }
+
+        // 창을 실제로 끌고 있는 경우에만 트리거를 적용한다.
+        // 파일 드래그, 텍스트 선택, 창 리사이즈 중 가장자리에 닿아도 포커스 창이 스냅되지 않도록 한다
+        guard confirmWindowDragIfNeeded() else { return }
 
         let mouseLocation = NSEvent.mouseLocation
         // Step 2 (drag): target display is where the cursor is (not focused window)
@@ -164,17 +188,56 @@ final class DragMonitor: @unchecked Sendable {
     private func handleMouseUp(event: CGEvent, settings: AppSettings) {
         let zone = currentTriggerZone
         let screen = previewScreen
+        let window = isWindowDrag ? dragWindow : nil
 
         isDragging = false
         currentTriggerZone = nil
         previewScreen = nil
+        dragWindow = nil
+        dragStartFrame = nil
+        isWindowDrag = false
 
         DispatchQueue.main.async { [weak self] in
             SnapPreviewWindow.shared.hide()
-            guard let self, let zone, let screen else { return }
+            guard let self, let zone, let screen, let window else { return }
             let snapSettings = AppSettings.shared
-            self.executeSnapForZone(zone: zone, screen: screen, settings: snapSettings)
+            self.executeSnapForZone(zone: zone, screen: screen, settings: snapSettings, window: window)
         }
+    }
+
+    // MARK: - Window Drag Detection
+
+    /// 포커스 창의 원점이 움직였고 크기는 그대로면 창 이동으로 판정한다 (리사이즈는 크기가 바뀌므로 제외).
+    /// 한 번 확인되면 드래그가 끝날 때까지 다시 검사하지 않는다
+    private func confirmWindowDragIfNeeded() -> Bool {
+        if isWindowDrag { return true }
+
+        let now = ProcessInfo.processInfo.systemUptime
+        guard now - lastFrameCheck >= Self.frameCheckInterval else { return false }
+        lastFrameCheck = now
+
+        // 첫 드래그 이벤트에서 창을 붙잡는다 (mouseDown 직후에는 포커스 전환이 끝나지 않았을 수 있음)
+        if dragWindow == nil {
+            guard let window = WindowManager.shared.getFocusedWindow(),
+                  let frame = WindowManager.shared.getWindowFrame(window) else { return false }
+            dragWindow = window
+            dragStartFrame = frame
+            return false
+        }
+
+        guard let window = dragWindow,
+              let startFrame = dragStartFrame,
+              let currentFrame = WindowManager.shared.getWindowFrame(window) else { return false }
+
+        let moved = abs(currentFrame.origin.x - startFrame.origin.x) >= Self.moveThreshold
+            || abs(currentFrame.origin.y - startFrame.origin.y) >= Self.moveThreshold
+        let sameSize = abs(currentFrame.width - startFrame.width) < 1
+            && abs(currentFrame.height - startFrame.height) < 1
+
+        if moved && sameSize {
+            isWindowDrag = true
+        }
+        return isWindowDrag
     }
 
     // MARK: - Preview
@@ -208,8 +271,12 @@ final class DragMonitor: @unchecked Sendable {
 
     // MARK: - Snap Execution
 
-    private func executeSnapForZone(zone: SnapTriggerZone, screen: NSScreen, settings: AppSettings) {
-        guard let window = WindowManager.shared.getFocusedWindow() else { return }
+    private func executeSnapForZone(
+        zone: SnapTriggerZone,
+        screen: NSScreen,
+        settings: AppSettings,
+        window: AXUIElement
+    ) {
         let layout = zone.builtInLayout.makeLayoutPreset(
             halfRatio: settings.halfRatio,
             thirdRatio: settings.thirdRatio

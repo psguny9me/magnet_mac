@@ -57,26 +57,36 @@ struct LayoutPreset: Codable, Identifiable, Equatable {
     var shortcut: ShortcutBinding?
     /// 기본 제공 프리셋 여부 (true면 삭제 불가)
     var isBuiltIn: Bool
+    /// 기본 제공 프리셋 종류 (커스텀 레이아웃은 nil). 저장된 JSON에 없으면 nil로 디코딩된다
+    var builtInKind: BuiltInLayout?
+
+    /// 단축키 저장·충돌 검사에 쓰는 안정적인 키.
+    /// 기본 프리셋은 `makeBuiltInPresets()` 호출마다 id가 새로 생성되므로 id 대신 종류의 rawValue를 쓴다
+    var bindingKey: String {
+        builtInKind?.rawValue ?? id.uuidString
+    }
 
     init(
         id: UUID = UUID(),
         name: String,
         frame: RelativeFrame,
         shortcut: ShortcutBinding? = nil,
-        isBuiltIn: Bool = false
+        isBuiltIn: Bool = false,
+        builtInKind: BuiltInLayout? = nil
     ) {
         self.id = id
         self.name = name
         self.frame = frame
         self.shortcut = shortcut
         self.isBuiltIn = isBuiltIn
+        self.builtInKind = builtInKind
     }
 }
 
 // MARK: - BuiltInLayout
 
 /// 기본 제공 레이아웃 프리셋 정의
-enum BuiltInLayout: String, CaseIterable {
+enum BuiltInLayout: String, CaseIterable, Codable {
     case halfLeft       = "half_left"
     case halfRight      = "half_right"
     case halfTop        = "half_top"
@@ -178,7 +188,8 @@ enum BuiltInLayout: String, CaseIterable {
             name: localizedName,
             frame: makeRelativeFrame(halfRatio: halfRatio, thirdRatio: thirdRatio),
             shortcut: defaultShortcut,
-            isBuiltIn: true
+            isBuiltIn: true,
+            builtInKind: self
         )
     }
 }

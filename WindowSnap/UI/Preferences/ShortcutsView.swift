@@ -40,6 +40,7 @@ struct ShortcutsView: View {
                     onBindShortcut: { newShortcut in
                         bindShortcut(newShortcut, for: row.id)
                     },
+                    onCancelRecording: { isRecording = nil },
                     onClearShortcut: {
                         clearShortcut(for: row.id)
                     }
@@ -65,14 +66,11 @@ struct ShortcutsView: View {
         .onTapGesture { isRecording = nil }
     }
 
+    /// - Parameter layoutId: 행의 키. 내장 레이아웃은 `BuiltInLayout.rawValue`, 액션은 `AppShortcutAction.rawValue`이며
+    ///   `LayoutPreset.bindingKey`와 같은 값이라 자기 자신과의 충돌을 제외할 수 있다
     private func bindShortcut(_ shortcut: ShortcutBinding, for layoutId: String) {
         do {
-            let existingUUID = UUID()
-            try KeyboardShortcutManager.shared.validateShortcut(
-                shortcut,
-                excludingLayoutId: existingUUID,
-                excludingActionId: AppShortcutAction(rawValue: layoutId)?.rawValue
-            )
+            try KeyboardShortcutManager.shared.validateShortcut(shortcut, excludingKey: layoutId)
             settings.shortcutBindings[layoutId] = shortcut
             conflictMessage = nil
             reloadShortcuts()
@@ -109,6 +107,7 @@ private struct ShortcutRowView: View {
     let isRecording: Bool
     let onStartRecording: () -> Void
     let onBindShortcut: (ShortcutBinding) -> Void
+    let onCancelRecording: () -> Void
     let onClearShortcut: () -> Void
 
     var body: some View {
@@ -117,7 +116,7 @@ private struct ShortcutRowView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             if isRecording {
-                ShortcutRecorderView(onRecord: onBindShortcut)
+                ShortcutRecorderView(onRecord: onBindShortcut, onCancel: onCancelRecording)
                     .frame(width: 150)
             } else {
                 shortcutLabel
@@ -159,10 +158,12 @@ private struct ShortcutRowView: View {
 private struct ShortcutRecorderView: NSViewRepresentable {
 
     let onRecord: (ShortcutBinding) -> Void
+    let onCancel: () -> Void
 
     func makeNSView(context: Context) -> ShortcutRecorderNSView {
         let view = ShortcutRecorderNSView()
         view.onRecord = onRecord
+        view.onCancel = onCancel
         return view
     }
 
@@ -175,6 +176,7 @@ private struct ShortcutRecorderView: NSViewRepresentable {
 final class ShortcutRecorderNSView: NSView {
 
     var onRecord: ((ShortcutBinding) -> Void)?
+    var onCancel: (() -> Void)?
 
     override var acceptsFirstResponder: Bool { true }
 
@@ -189,7 +191,11 @@ final class ShortcutRecorderNSView: NSView {
             | NSEvent.ModifierFlags.shift.rawValue
             | NSEvent.ModifierFlags.command.rawValue
         let modifiers = event.modifierFlags.rawValue & relevant
-        guard modifiers != 0 else { return }
+        // 수식키 없는 ⎋는 녹화 취소, 그 외 수식키 없는 키는 무시
+        if modifiers == 0 {
+            if event.keyCode == 53 { onCancel?() }
+            return
+        }
         let shortcut = ShortcutBinding(keyCode: event.keyCode, modifiers: modifiers)
         onRecord?(shortcut)
     }
@@ -197,7 +203,7 @@ final class ShortcutRecorderNSView: NSView {
     override func draw(_ dirtyRect: NSRect) {
         NSColor.selectedControlColor.setFill()
         NSBezierPath(roundedRect: bounds, xRadius: 4, yRadius: 4).fill()
-        let text = "단축키 입력..." as NSString
+        let text = "단축키 입력 (⎋ 취소)" as NSString
         let attrs: [NSAttributedString.Key: Any] = [
             .foregroundColor: NSColor.selectedControlTextColor,
             .font: NSFont.systemFont(ofSize: 12)
